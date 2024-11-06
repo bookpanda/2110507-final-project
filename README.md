@@ -1,6 +1,6 @@
 # 2110507-final-project
 
-# Setting up
+## Setting up
 
 1. Copy `.env.template` and paste it in the same directory as `.env` and fill in the values.
 
