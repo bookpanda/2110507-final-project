@@ -1,3 +1,5 @@
+import { Footer } from "@/components/Footer";
+import { NavBar } from "@/components/NavBar";
 import type { Metadata } from "next";
 import { Lato } from "next/font/google";
 import "./globals.css";
@@ -19,7 +21,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${lato.className} h-screen w-screen`}>{children}</body>
+      <body className={`${lato.className} h-screen w-screen`}>
+        <NavBar />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }
