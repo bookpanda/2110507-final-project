@@ -7,7 +7,7 @@ export const NavBar = async () => {
   const session = await getServerSession(authOptions);
 
   return (
-    <div className="sticky top-0 z-50 flex h-16 w-full justify-around border-b">
+    <div className="sticky top-0 z-50 flex h-16 w-full justify-around border-b bg-white">
       <div className="flex w-[20%] items-center">
         {session ? (
           <NavBarItem name="Logout" path="/api/auth/signout" />

@@ -21,7 +21,7 @@ export const Logo = () => {
           height={25}
           unoptimized
         />
-        <h1 className="text-red text-orange font-black">Dentist Booking</h1>
+        <h1 className="font-bold">Dentist Booking</h1>
       </div>
     </Link>
   );
