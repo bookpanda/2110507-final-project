@@ -1,3 +1,5 @@
+import { Dentist } from "@/types";
+
 export type CreateDentistDto = {
   name: string;
   hospital: string;
@@ -5,4 +7,10 @@ export type CreateDentistDto = {
   expertist: string;
   tel: string;
   picture: string;
+};
+
+export type FindAllDentistDto = {
+  success: boolean;
+  count: number;
+  data: Dentist[];
 };
