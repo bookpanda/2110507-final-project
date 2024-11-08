@@ -10,8 +10,6 @@ interface BannerProps {}
 const Banner: FC<BannerProps> = () => {
   return (
     <div className="relative h-[80vh] w-full">
-      <div className="absolute -z-10 h-1/3 w-full overflow-hidden bg-gradient-to-b from-[#F1E9F5] to-transparent" />
-
       <div className="z-10 flex flex-row items-center justify-center gap-x-40 p-20 text-white md:items-start">
         <div className="w-1/3">
           <h1 className="text-orange text-5xl italic">Special Dental Clinic</h1>

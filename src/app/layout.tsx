@@ -22,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${lato.className} h-screen w-screen`}>
+        <div className="absolute -z-10 h-[30vh] w-full overflow-hidden bg-gradient-to-b from-[#F1E9F5] to-transparent" />
         <NavBar />
         {children}
         <Footer />
