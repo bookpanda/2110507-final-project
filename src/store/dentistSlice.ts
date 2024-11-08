@@ -1,5 +1,5 @@
 import { Dentist } from "@/types";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 
 interface DentistState {
@@ -13,9 +13,17 @@ const initialState: DentistState = {
 export const dentistSlice = createSlice({
   name: "dentist",
   initialState,
-  reducers: {},
+  reducers: {
+    addDentist: (state, action: PayloadAction<Dentist>) => {
+      state.dentists.push(action.payload);
+    },
+    addDentists: (state, action: PayloadAction<Dentist[]>) => {
+      state.dentists.push(...action.payload);
+    },
+  },
 });
 
+export const { addDentist, addDentists } = dentistSlice.actions;
 export const selectDentists = (state: RootState) =>
   state.dentistReducer.dentists;
 
