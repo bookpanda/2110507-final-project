@@ -1,6 +1,10 @@
 import { API_URL } from "@/config/config";
 import { Dentist } from "@/types";
-import { CreateDentistDto, FindAllDentistDto } from "./dto/dentist.dto";
+import {
+  CreateDentistDto,
+  FindAllDentistDto,
+  FindDentistByIDDto,
+} from "./dto/dentist.dto";
 
 export const createDentist = async (
   dentist: CreateDentistDto
@@ -44,7 +48,7 @@ export const findAllDentist = async (): Promise<
 
 export const findDentistByID = async (
   id: string
-): Promise<Dentist | undefined> => {
+): Promise<FindDentistByIDDto | undefined> => {
   try {
     const response = await fetch(`${API_URL}/api/v1/dentists/${id}`, {
       method: "GET",

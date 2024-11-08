@@ -14,6 +14,7 @@ export type Booking = {
 };
 
 export type Dentist = {
+  _id: string;
   name: string;
   hospital: string;
   address: string;

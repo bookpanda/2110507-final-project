@@ -14,3 +14,8 @@ export type FindAllDentistDto = {
   count: number;
   data: Dentist[];
 };
+
+export type FindDentistByIDDto = {
+  success: boolean;
+  data: Dentist;
+};
