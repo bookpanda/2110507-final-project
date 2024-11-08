@@ -16,7 +16,7 @@ const Banner: FC<BannerProps> = () => {
         <div className="w-1/3">
           <h1 className="text-orange text-5xl italic">Special Dental Clinic</h1>
           <p className="text-pink mb-4 mt-2 text-3xl italic">
-            Faculty of Dentistry, Julaฯ
+            Faculty of Dentistry, Chaluฯ
           </p>
           <p className="mt-2 text-2xl italic text-black">
             International standard general and specialized dentistry services
