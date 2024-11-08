@@ -1,8 +1,4 @@
-export type CreateUserDto = {
-  name: string;
-  email: string;
-  tel: string;
-  role: string;
-  password: string;
+export type CreateBookingDto = {
+  bookingDate: string;
   createdAt: string;
 };
