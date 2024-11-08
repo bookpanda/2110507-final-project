@@ -1,4 +1,6 @@
 import { findAllDentist } from "@/api/dentist";
+import { CgInfo } from "react-icons/cg";
+
 import Image from "next/image";
 
 export const DentistsGrid = async () => {
@@ -22,7 +24,8 @@ export const DentistsGrid = async () => {
           />
           <p className="mt-4 text-2xl font-bold">{dentist.name}</p>
           <p className="mt-2 text-lg">{dentist.expertist}</p>
-          <div className="hover:bg-pink mt-4 flex w-full justify-center rounded-md bg-gray-200 py-2 transition duration-150 ease-in-out hover:text-white">
+          <div className="hover:bg-pink mt-4 flex w-full items-center justify-center rounded-md bg-gray-200 py-3 transition duration-150 ease-in-out hover:text-white">
+            <CgInfo className="mr-2 h-5 w-5" />
             See Profile
           </div>
         </div>
