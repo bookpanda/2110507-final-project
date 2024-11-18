@@ -8,8 +8,8 @@ export type User = {
 
 export type Booking = {
   bookingDate: string;
-  user: string;
-  dentist: string;
+  email: string;
+  dentist_id: string;
   createdAt: string;
 };
 
