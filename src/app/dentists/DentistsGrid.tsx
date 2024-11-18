@@ -13,15 +13,6 @@ export const DentistsGrid = async () => {
 
   return (
     <div className="grid grid-cols-3 gap-4">
-         <Select
-            
-            >
-              {dentists.map((dentist) => (
-                <MenuItem key={dentist.name} value={dentist.name}>
-                  {dentist.hospital}
-                </MenuItem>
-              ))}
-            </Select>
       {dentists.map((dentist) => (
         <div className="flex h-[35vh] flex-col items-center">
           <Image
