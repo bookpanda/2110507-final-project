@@ -65,11 +65,12 @@ export default function Booking() {
   }, []);
 
 
-  const makeBooking = () => {
+  const makeBooking = (_id:string,bookDate:string,dentist:string) => {
     const item = {
-      email: name,
-      dentist_name: lastName,
-      bookDate: dayjs(date).format("DD/MM/YYYY HH:mm:ss"),
+      _id:_id,
+      bookDate:bookDate,
+      dentist: dentist,
+    
     };
 
     dispatch(addBooking(item));
@@ -132,7 +133,7 @@ export default function Booking() {
           </Select>
           <DateReserve onDateChange={(value: Dayjs) => setDate(value)} />
           <button
-            onClick={makeBooking}
+        
             name="Book Vaccine"
             className="block rounded-md bg-sky-600 hover:bg-indigo-600 px-3 py-2 shadow-sm text-white"
           >

@@ -20,10 +20,8 @@ interface HospitalItem {
 
   interface bookItem{
  _id:string;
- bookingDate:string;
- user: string,
-dentist: Object,
-      createdAt: string
+ bookDate:string;
+dentist: string,
   }
 
   interface Dentist{

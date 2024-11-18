@@ -13,16 +13,16 @@ export default function BookingList() {
         <div className="text-xl flex justify-center items-center">No Vaccine Booking</div>
       ) : (
         bookingItems.map((bookItem) => (
-          <div className="bg-slate-200 rounded px-5 mx-5 py-2 my-2" key={bookItem.id}>
+          <div className="bg-slate-200 rounded px-5 mx-5 py-2 my-2" key={bookItem._id}>
             <div className="text-xl text-black">
-              ชื่อ-นามสกุล: {bookItem.name} {bookItem.surname}
+        
             </div>
-            <div className="text-xl text-black">รหัสประจำตัวประชาชน: {bookItem.id}</div>
-            <div className="text-xl text-black">โรงพยาบาล: {bookItem.hospital}</div>
+            <div className="text-xl text-black">รหัสประจำตัวประชาชน: </div>
+            <div className="text-xl text-black">โรงพยาบาล:</div>
             <div className="text-xl text-black">วันที่ต้องการรับวัคซีน: {bookItem.bookDate}</div>
             <button
               className="block rounded-md bg-sky-600 hover:bg-indigo-600 px-3 py-1 text-white shadow-sm"
-              onClick={() => dispatch(removeBooking(bookItem.id))}
+              onClick={() => dispatch(removeBooking(bookItem._id))}
             >
               Remove Booking
             </button>
