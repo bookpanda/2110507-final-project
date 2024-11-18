@@ -4,6 +4,7 @@ import DateReserve from '@/components/DateReserve';
 import { authOptions } from './auth/[...nextauth]/authOptions';
 import { getServerSession } from 'next-auth';
 import getUserProfile from "@/libs/getUserProfile";
+import { API_URL } from "@/config/config";
 
 
 export const fetchBookings = async (dentistId: string): Promise<any> => {
@@ -16,7 +17,7 @@ export const fetchBookings = async (dentistId: string): Promise<any> => {
 
   try {
 
-    const response = await fetch(`https://final-project-backend-mocha.vercel.app/api/v1/bookings/free`, {
+    const response = await fetch(`${API_URL}/api/v1/bookings/free`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

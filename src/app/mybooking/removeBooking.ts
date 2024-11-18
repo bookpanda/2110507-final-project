@@ -1,3 +1,4 @@
+import { API_URL } from "@/config/config";
 import { getSession } from "next-auth/react";
 
 // Remove booking function
@@ -18,7 +19,7 @@ export default async function removeBooking(bookingid: string) {
 
   try {
     // Send DELETE request to backend API
-    const response = await fetch(`https://final-project-backend-mocha.vercel.app/api/v1/bookings/${bookingid}`, {
+    const response = await fetch(`${API_URL}/api/v1/bookings/${bookingid}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

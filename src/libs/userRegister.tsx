@@ -1,3 +1,5 @@
+import { API_URL } from "@/config/config";
+
 export default async function userRegister(name: string, email: string, tel: string, role: string, password: string) {
     // Create the request body object
     const requestBody = {
@@ -13,7 +15,7 @@ export default async function userRegister(name: string, email: string, tel: str
     console.log("Request Body:", JSON.stringify(requestBody));
 
     // Send the request to the server
-    const response = await fetch("https://2110507-dentist-booking-backend.vercel.app/api/v1/auth/register", {
+    const response = await fetch(`${API_URL}/api/v1/auth/register`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

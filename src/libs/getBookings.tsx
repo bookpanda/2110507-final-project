@@ -1,5 +1,6 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from '../app/api/auth/[...nextauth]/authOptions'
+import { API_URL } from "@/config/config";
 export default async function getBookings(dentistId:string) {
     // Create the request body object
     const session= await getServerSession(authOptions)
@@ -11,7 +12,7 @@ export default async function getBookings(dentistId:string) {
     console.log("Request Body:", JSON.stringify(requestBody));
 
     // Send the request to the server
-    const response = await fetch("https://final-project-backend-mocha.vercel.app:443/api/v1/bookings/free", {
+    const response = await fetch(`${API_URL}/api/v1/bookings/free`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

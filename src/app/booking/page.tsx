@@ -10,18 +10,19 @@ import { addBooking } from "@/redux/features/bookSlice";
 import { findAllDentist } from "../api/dentist";
 import { fetchBookings } from "../api/booking copy";
 import { Dentist } from "@/types";
+
 export default function Booking() {
   const [dentists, setDentists] = useState<Dentist[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const [date, setDate] = useState<Dayjs | null>(null);
+  const [filteredBookings, setFilteredBookings] = useState<any[]>([]); // Track filtered bookings
   const dispatch = useDispatch<AppDispatch>();
   const [name, setName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [id, setId] = useState<string>("");
   const [hospital, setHospital] = useState<string>("");
- 
 
   // Fetch dentists on component mount
   useEffect(() => {
@@ -43,9 +44,9 @@ export default function Booking() {
     fetchDentists();
   }, []);
 
-  const [bookingItems, setBookingItems] = useState([]);
+  const [bookingItems, setBookingItems] = useState<any[]>([]);
 
-
+  // Fetch bookings and filter them based on the date when it changes
   useEffect(() => {
     const loadBookings = async () => {
       try {
@@ -54,6 +55,10 @@ export default function Booking() {
           throw new Error("Failed to fetch bookings");
         }
         setBookingItems(res.data);
+        // Initially, display all bookings if no date is selected
+        if (!date) {
+          setFilteredBookings(res.data);
+        }
       } catch (err: any) {
         setError(err.message || "An error occurred while fetching bookings");
       } finally {
@@ -62,15 +67,25 @@ export default function Booking() {
     };
 
     loadBookings();
-  }, []);
+  }, [date]); // Trigger on date change
 
+  useEffect(() => {
+    // If there's a selected date, filter the bookings by that date
+    if (date) {
+      const filtered = bookingItems.filter((booking: any) => 
+        dayjs(booking.bookingDate).isSame(date, 'day')
+      );
+      setFilteredBookings(filtered);
+    } else {
+      setFilteredBookings(bookingItems); // No date selected, show all
+    }
+  }, [date, bookingItems]); // Filter when either date or bookingItems change
 
-  const makeBooking = (_id:string,bookDate:string,dentist:string) => {
+  const makeBooking = (_id: string, bookDate: string, dentist: string) => {
     const item = {
-      _id:_id,
-      bookDate:bookDate,
+      _id: _id,
+      bookDate: bookDate,
       dentist: dentist,
-    
     };
 
     dispatch(addBooking(item));
@@ -94,25 +109,19 @@ export default function Booking() {
             variant="standard"
             name="Name"
             label="Name"
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
+            onChange={(e) => setName(e.target.value)}
           />
           <TextField
             variant="standard"
             name="LastName"
             label="LastName"
-            onChange={(e) => {
-              setLastName(e.target.value);
-            }}
+            onChange={(e) => setLastName(e.target.value)}
           />
           <TextField
             variant="standard"
             name="Citizen ID"
             label="Citizen ID"
-            onChange={(e) => {
-              setId(e.target.value);
-            }}
+            onChange={(e) => setId(e.target.value)}
           />
           <div className="text-md text-left text-gray-600">Hospital</div>
           <Select
@@ -121,9 +130,7 @@ export default function Booking() {
             id="hospital"
             className="w-auto h-[2em]"
             value={hospital}
-            onChange={(e) => {
-              setHospital(e.target.value);
-            }}
+            onChange={(e) => setHospital(e.target.value)}
           >
             {dentists.map((dentist: any) => (
               <MenuItem key={dentist.hospital} value={dentist.hospital}>
@@ -133,7 +140,6 @@ export default function Booking() {
           </Select>
           <DateReserve onDateChange={(value: Dayjs) => setDate(value)} />
           <button
-        
             name="Book Vaccine"
             className="block rounded-md bg-sky-600 hover:bg-indigo-600 px-3 py-2 shadow-sm text-white"
           >
@@ -144,9 +150,9 @@ export default function Booking() {
 
       <div className="mt-6">
         <h2 className="text-lg font-medium">Existing Bookings</h2>
-        {bookingItems.length > 0 ? (
+        {filteredBookings.length > 0 ? (
           <ul className="mt-4 space-y-2">
-            {bookingItems.map((booking: any, index) => (
+            {filteredBookings.map((booking: any, index) => (
               <li
                 key={index}
                 className="border p-2 rounded-md bg-gray-50 shadow-sm"
