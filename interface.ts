@@ -25,3 +25,19 @@ interface HospitalItem {
 dentist: Object,
       createdAt: string
   }
+
+  interface Dentist{
+    _id:string;
+
+name:string;
+
+hospital:string;
+
+address:string;
+
+expertist:string;
+
+tel:string;
+
+picture:string;
+  }

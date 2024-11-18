@@ -9,9 +9,9 @@ import { AppDispatch } from "@/redux/store";
 import { addBooking } from "@/redux/features/bookSlice";
 import { findAllDentist } from "../api/dentist";
 import { fetchBookings } from "../api/booking copy";
-
+import { Dentist } from "@/types";
 export default function Booking() {
-  const [dentists, setDentists] = useState([]);
+  const [dentists, setDentists] = useState<Dentist[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,6 +32,7 @@ export default function Booking() {
           throw new Error("Failed to fetch dentists");
         }
         setDentists(res.data);
+        console.log(res.data);
       } catch (err: any) {
         setError(err.message || "An error occurred");
       } finally {
