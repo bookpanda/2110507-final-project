@@ -19,3 +19,12 @@ export type FindDentistByIDDto = {
   success: boolean;
   data: Dentist;
 };
+
+export type UpdateDentistDto = {
+  name: string;
+  hospital: string;
+  address: string;
+  expertist: string;
+  tel: string;
+  picture: string;
+};
