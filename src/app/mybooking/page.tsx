@@ -35,24 +35,25 @@ const BookingsPage = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <main>
+    <main className="mt-[10vh] h-[80vh] px-[10vw]">
+      {bookingItems.length === 0 && <div>There are no bookings.</div>}
       {bookingItems.map((bookItem: any) => (
         <div
           className="mx-5 my-2 rounded bg-slate-200 px-5 py-2"
           key={bookItem.id}
         >
           <div className="text-xl text-black">
-            วันที่จอง: {bookItem._id} {bookItem.bookingDate}
+            Date: {bookItem._id} {bookItem.bookingDate}
           </div>
           <div className="text-xl text-black">หมอ: {bookItem.dentist.name}</div>
           <div className="text-xl text-black">
-            โรงพยาบาล: {bookItem.dentist.hospital}
+            Hospital: {bookItem.dentist.hospital}
           </div>
           <button
             className="block rounded-md bg-sky-600 px-3 py-1 text-white shadow-sm hover:bg-indigo-600"
             onClick={() => removeBooking(bookItem._id)}
           >
-            ยกเลิกการจอง
+            Cancel
           </button>
         </div>
       ))}
