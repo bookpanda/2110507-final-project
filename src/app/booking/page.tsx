@@ -62,7 +62,7 @@ export default function Booking() {
   }
 
   return (
-    <main className="mb-12 flex w-[100%] flex-col items-center space-y-4">
+    <main className="mb-12 mt-12 flex w-[100%] flex-col items-center space-y-4">
       <div className="text-xl font-medium">New Reservation</div>
       <div className="w-fit space-y-2">
         <FormControl

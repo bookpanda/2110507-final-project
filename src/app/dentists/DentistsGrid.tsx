@@ -1,7 +1,6 @@
 import { findAllDentist } from "@/app/api/dentist";
 import { CgInfo } from "react-icons/cg";
 
-import { MenuItem, Select } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 export const DentistsGrid = async () => {
@@ -13,13 +12,6 @@ export const DentistsGrid = async () => {
 
   return (
     <div className="grid grid-cols-3 gap-4">
-      <Select>
-        {dentists.map((dentist) => (
-          <MenuItem key={dentist.name} value={dentist.name}>
-            {dentist.hospital}
-          </MenuItem>
-        ))}
-      </Select>
       {dentists.map((dentist) => (
         <div className="flex h-[35vh] flex-col items-center">
           <Image
