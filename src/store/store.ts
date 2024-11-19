@@ -11,6 +11,7 @@ import {
 } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import { WebStorage } from "redux-persist/lib/types";
+import bookReducer from "./bookSlice";
 import dentistReducer from "./dentistSlice";
 
 function createPersistentStorage(): WebStorage {
@@ -38,7 +39,7 @@ const persistConfig = {
   storage,
 };
 
-const rootReducer = combineReducers({ dentistReducer });
+const rootReducer = combineReducers({ dentistReducer, bookReducer });
 const reduxPersistReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({

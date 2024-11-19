@@ -1,8 +1,8 @@
-import { Booking, Dentist } from "@/types";
+import { Booking } from "@/types";
 export type CreateBookingDto = {
-  email:string;
+  email: string;
   bookDate: string;
-  dentist_id:string
+  dentist_id: string;
 };
 export type FindAllBookingDto = {
   success: boolean;
@@ -17,4 +17,3 @@ export type FindBookingByDentistIDDto = {
   success: boolean;
   data: Booking[];
 };
-

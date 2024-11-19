@@ -3,7 +3,6 @@ import { CgInfo } from "react-icons/cg";
 
 import Image from "next/image";
 import Link from "next/link";
-import { FormControl, TextField, Select, MenuItem } from "@mui/material";
 export const DentistsGrid = async () => {
   const res = await findAllDentist();
   if (!res) {
@@ -13,15 +12,6 @@ export const DentistsGrid = async () => {
 
   return (
     <div className="grid grid-cols-3 gap-4">
-         <Select
-            
-            >
-              {dentists.map((dentist) => (
-                <MenuItem key={dentist.name} value={dentist.name}>
-                  {dentist.hospital}
-                </MenuItem>
-              ))}
-            </Select>
       {dentists.map((dentist) => (
         <div className="flex h-[35vh] flex-col items-center">
           <Image
@@ -35,7 +25,7 @@ export const DentistsGrid = async () => {
           <p className="mt-4 text-2xl font-bold">{dentist.name}</p>
           <p className="mt-2 text-lg">{dentist.expertist}</p>
           <Link href={`/dentist/${dentist._id}`} className="w-full">
-            <div className="hover:bg-pink mt-4 flex w-full cursor-pointer items-center justify-center rounded-md bg-gray-200 py-3 transition duration-150 ease-in-out hover:text-white">
+            <div className="mt-4 flex w-full cursor-pointer items-center justify-center rounded-md bg-gray-200 py-3 transition duration-150 ease-in-out hover:bg-pink hover:text-white">
               <CgInfo className="mr-2 h-5 w-5" />
               See Profile
             </div>
