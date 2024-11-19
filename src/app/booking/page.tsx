@@ -8,8 +8,8 @@ import { FormControl, MenuItem, Select, TextField } from "@mui/material";
 import { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { fetchFreeBookings } from "../api/booking";
 import { findAllDentist } from "../api/dentist";
+import { FreeSlots } from "./FreeSlots";
 export default function Booking() {
   const [dentists, setDentists] = useState<Dentist[]>([]);
   const [loading, setLoading] = useState(true);
@@ -42,26 +42,6 @@ export default function Booking() {
     fetchDentists();
   }, []);
 
-  const [bookingItems, setBookingItems] = useState([]);
-
-  useEffect(() => {
-    const loadBookings = async () => {
-      try {
-        const res = await fetchFreeBookings(""); // Call your API function
-        if (!res || !res.data) {
-          throw new Error("Failed to fetch bookings");
-        }
-        setBookingItems(res.data);
-      } catch (err: any) {
-        setError(err.message || "An error occurred while fetching bookings");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadBookings();
-  }, []);
-
   const makeBooking = (_id: string, bookDate: string, dentist: string) => {
     const item = {
       _id: _id,
@@ -74,15 +54,15 @@ export default function Booking() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="h-[80vh]">Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="h-[80vh]">Error: {error}</div>;
   }
 
   return (
-    <main className="flex w-[100%] flex-col items-center space-y-4">
+    <main className="mb-12 flex w-[100%] flex-col items-center space-y-4">
       <div className="text-xl font-medium">New Reservation</div>
       <div className="w-fit space-y-2">
         <FormControl
@@ -140,31 +120,7 @@ export default function Booking() {
         </FormControl>
       </div>
 
-      <div className="mt-6">
-        <h2 className="text-lg font-medium">Existing Bookings</h2>
-        {bookingItems.length > 0 ? (
-          <ul className="mt-4 space-y-2">
-            {bookingItems.map((booking: any, index) => (
-              <li
-                key={index}
-                className="rounded-md border bg-gray-50 p-2 shadow-sm"
-              >
-                <div>
-                  <strong>Name:</strong> {booking.dentist.name}
-                </div>
-                <div>
-                  <strong>Date:</strong> {booking.bookingDate}
-                </div>
-                <div>
-                  <strong>Hospital:</strong> {booking.dentist.hospital}
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No bookings available.</p>
-        )}
-      </div>
+      <FreeSlots />
     </main>
   );
 }

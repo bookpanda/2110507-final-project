@@ -1,6 +1,9 @@
 import { getSession } from "next-auth/react";
+import { FindAllBookingDto } from "./dto/booking.dto";
 
-export const fetchBookings = async (dentistId: string): Promise<any> => {
+export const fetchBookings = async (
+  dentistId: string
+): Promise<FindAllBookingDto> => {
   const query = dentistId ? `?dentistId=${dentistId}` : "";
   const session = await getSession();
   if (!session) {
@@ -31,7 +34,9 @@ export const fetchBookings = async (dentistId: string): Promise<any> => {
   }
 };
 
-export const fetchFreeBookings = async (dentistId: string): Promise<any> => {
+export const fetchFreeBookings = async (
+  dentistId: string
+): Promise<FindAllBookingDto> => {
   const query = dentistId ? `?dentistId=${dentistId}` : "";
   const session = await getSession();
   console.log(session);
