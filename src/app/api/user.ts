@@ -1,24 +1,20 @@
 import { API_URL } from "@/config/config";
 import { User } from "@/types";
-import { getSession } from "next-auth/react";
 
-export const getAuthProfile = async (): Promise<User | undefined> => {
-  const session = await getSession();
-  if (!session) {
-    throw new Error("Not authenticated");
-  }
-
+export const getAuthProfile = async (
+  token: string
+): Promise<User | undefined> => {
   try {
     const response = await fetch(`${API_URL}/api/v1/auth/me`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${session.user.token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to find all dentists: ${response.statusText}`);
+      throw new Error(`Failed to get user profile: ${response.statusText}`);
     }
 
     return response.json();
