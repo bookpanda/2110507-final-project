@@ -1,28 +1,24 @@
-import { useSession, getSession } from "next-auth/react";
-import {FormControl,TextField,Select,MenuItem} from '@mui/material';
-import DateReserve from '@/components/DateReserve';
-import { authOptions } from './auth/[...nextauth]/authOptions';
-import { getServerSession } from 'next-auth';
-import getUserProfile from "@/libs/getUserProfile";
-
+import { getSession } from "next-auth/react";
 
 export const fetchBookings = async (dentistId: string): Promise<any> => {
-  const query = dentistId ? `?dentistId=${dentistId}` : '';
+  const query = dentistId ? `?dentistId=${dentistId}` : "";
   const session = await getSession();
-  console.log(session)
+  console.log(session);
   if (!session) {
     throw new Error("Not authenticated");
   }
 
   try {
-
-    const response = await fetch(`https://final-project-backend-mocha.vercel.app/api/v1/bookings/free`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${session?.user.token}`,
-      },
-    });
+    const response = await fetch(
+      `https://final-project-backend-mocha.vercel.app/api/v1/bookings/free`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user.token}`,
+        },
+      }
+    );
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -35,6 +31,3 @@ export const fetchBookings = async (dentistId: string): Promise<any> => {
     throw error;
   }
 };
-
-
-

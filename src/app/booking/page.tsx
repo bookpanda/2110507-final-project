@@ -1,15 +1,15 @@
 "use client";
 
-import { FormControl, TextField, Select, MenuItem } from "@mui/material";
 import DateReserve from "@/components/DateReserve";
-import { useState, useEffect } from "react";
-import dayjs, { Dayjs } from "dayjs";
-import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-import { addBooking } from "@/redux/features/bookSlice";
-import { findAllDentist } from "../api/dentist";
-import { fetchBookings } from "../api/booking copy";
+import { addBooking } from "@/store/bookSlice";
 import { Dentist } from "@/types";
+import { FormControl, MenuItem, Select, TextField } from "@mui/material";
+import { Dayjs } from "dayjs";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { fetchBookings } from "../api/booking copy";
+import { findAllDentist } from "../api/dentist";
 export default function Booking() {
   const [dentists, setDentists] = useState<Dentist[]>([]);
   const [loading, setLoading] = useState(true);
@@ -21,7 +21,6 @@ export default function Booking() {
   const [lastName, setLastName] = useState<string>("");
   const [id, setId] = useState<string>("");
   const [hospital, setHospital] = useState<string>("");
- 
 
   // Fetch dentists on component mount
   useEffect(() => {
@@ -45,7 +44,6 @@ export default function Booking() {
 
   const [bookingItems, setBookingItems] = useState([]);
 
-
   useEffect(() => {
     const loadBookings = async () => {
       try {
@@ -64,13 +62,11 @@ export default function Booking() {
     loadBookings();
   }, []);
 
-
-  const makeBooking = (_id:string,bookDate:string,dentist:string) => {
+  const makeBooking = (_id: string, bookDate: string, dentist: string) => {
     const item = {
-      _id:_id,
-      bookDate:bookDate,
+      _id: _id,
+      bookDate: bookDate,
       dentist: dentist,
-    
     };
 
     dispatch(addBooking(item));
@@ -86,10 +82,13 @@ export default function Booking() {
   }
 
   return (
-    <main className="w-[100%] flex flex-col items-center space-y-4">
+    <main className="flex w-[100%] flex-col items-center space-y-4">
       <div className="text-xl font-medium">New Reservation</div>
       <div className="w-fit space-y-2">
-        <FormControl variant="standard" className="w-auto space-y-3 bg-gray-100">
+        <FormControl
+          variant="standard"
+          className="w-auto space-y-3 bg-gray-100"
+        >
           <TextField
             variant="standard"
             name="Name"
@@ -119,7 +118,7 @@ export default function Booking() {
             variant="standard"
             name="hospital"
             id="hospital"
-            className="w-auto h-[2em]"
+            className="h-[2em] w-auto"
             value={hospital}
             onChange={(e) => {
               setHospital(e.target.value);
@@ -133,9 +132,8 @@ export default function Booking() {
           </Select>
           <DateReserve onDateChange={(value: Dayjs) => setDate(value)} />
           <button
-        
             name="Book Vaccine"
-            className="block rounded-md bg-sky-600 hover:bg-indigo-600 px-3 py-2 shadow-sm text-white"
+            className="block rounded-md bg-sky-600 px-3 py-2 text-white shadow-sm hover:bg-indigo-600"
           >
             Book Vaccine
           </button>
@@ -149,11 +147,17 @@ export default function Booking() {
             {bookingItems.map((booking: any, index) => (
               <li
                 key={index}
-                className="border p-2 rounded-md bg-gray-50 shadow-sm"
+                className="rounded-md border bg-gray-50 p-2 shadow-sm"
               >
-                <div><strong>Name:</strong> {booking.dentist.name}</div>
-                <div><strong>Date:</strong> {booking.bookingDate}</div>
-                <div><strong>Hospital:</strong> {booking.dentist.hospital}</div>
+                <div>
+                  <strong>Name:</strong> {booking.dentist.name}
+                </div>
+                <div>
+                  <strong>Date:</strong> {booking.bookingDate}
+                </div>
+                <div>
+                  <strong>Hospital:</strong> {booking.dentist.hospital}
+                </div>
               </li>
             ))}
           </ul>

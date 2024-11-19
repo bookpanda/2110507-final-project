@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
 import { fetchBookings } from "../api/booking"; // Ensure the correct path
- // Replace with the actual path to your slice
+// Replace with the actual path to your slice
+import { AppDispatch } from "@/store/store";
 import removeBooking from "./removeBooking";
 
 const BookingsPage = () => {
@@ -31,22 +31,25 @@ const BookingsPage = () => {
     loadBookings();
   }, []);
 
-
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <main>
       {bookingItems.map((bookItem: any) => (
-        <div className="bg-slate-200 rounded px-5 mx-5 py-2 my-2" key={bookItem.id}>
+        <div
+          className="mx-5 my-2 rounded bg-slate-200 px-5 py-2"
+          key={bookItem.id}
+        >
           <div className="text-xl text-black">
             วันที่จอง: {bookItem._id} {bookItem.bookingDate}
           </div>
           <div className="text-xl text-black">หมอ: {bookItem.dentist.name}</div>
-          <div className="text-xl text-black">โรงพยาบาล: {bookItem.dentist.hospital}</div>
+          <div className="text-xl text-black">
+            โรงพยาบาล: {bookItem.dentist.hospital}
+          </div>
           <button
-            className="block rounded-md bg-sky-600 hover:bg-indigo-600 px-3 py-1 text-white shadow-sm"
+            className="block rounded-md bg-sky-600 px-3 py-1 text-white shadow-sm hover:bg-indigo-600"
             onClick={() => removeBooking(bookItem._id)}
           >
             ยกเลิกการจอง
