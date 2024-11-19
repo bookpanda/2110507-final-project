@@ -8,7 +8,7 @@ import { FormControl, MenuItem, Select, TextField } from "@mui/material";
 import { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { fetchBookings } from "../api/booking copy";
+import { fetchFreeBookings } from "../api/booking";
 import { findAllDentist } from "../api/dentist";
 export default function Booking() {
   const [dentists, setDentists] = useState<Dentist[]>([]);
@@ -20,7 +20,7 @@ export default function Booking() {
   const [name, setName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [id, setId] = useState<string>("");
-  const [hospital, setHospital] = useState<string>("");
+  const [dentist, setDentist] = useState<string>("");
 
   // Fetch dentists on component mount
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function Booking() {
   useEffect(() => {
     const loadBookings = async () => {
       try {
-        const res = await fetchBookings(""); // Call your API function
+        const res = await fetchFreeBookings(""); // Call your API function
         if (!res || !res.data) {
           throw new Error("Failed to fetch bookings");
         }
@@ -113,19 +113,19 @@ export default function Booking() {
               setId(e.target.value);
             }}
           />
-          <div className="text-md text-left text-gray-600">Hospital</div>
+          <div className="text-md text-left text-gray-600">Dentist</div>
           <Select
             variant="standard"
             name="hospital"
             id="hospital"
             className="h-[2em] w-auto"
-            value={hospital}
+            value={dentist}
             onChange={(e) => {
-              setHospital(e.target.value);
+              setDentist(e.target.value);
             }}
           >
-            {dentists.map((dentist: any) => (
-              <MenuItem key={dentist.hospital} value={dentist.hospital}>
+            {dentists.map((dentist: Dentist) => (
+              <MenuItem key={dentist._id} value={dentist.name}>
                 {dentist.name}
               </MenuItem>
             ))}
