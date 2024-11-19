@@ -5,7 +5,6 @@ import { NavBarItem } from "./NavBarItem";
 
 export const NavBar = async () => {
   const session = await getServerSession(authOptions);
-  // console.log(session);
   const isAdmin = session?.user.role === "admin";
 
   return (

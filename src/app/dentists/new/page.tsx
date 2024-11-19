@@ -1,48 +1,96 @@
-import { findDentistByID } from "@/app/api/dentist";
-import Image from "next/image";
-import Link from "next/link";
-import { FaChevronLeft } from "react-icons/fa6";
+"use client";
 
-interface DentistPageProps {
-  params: {
-    id: string;
+import { createDentist } from "@/app/api/dentist";
+import { CreateDentistDto } from "@/app/api/dto/dentist.dto";
+import { Box, Button, TextField, Typography } from "@mui/material";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+
+export default function NewDentistPage() {
+  const { data: session, status } = useSession();
+
+  const [dentist, setDentist] = useState<CreateDentistDto>({
+    name: "",
+    hospital: "Chalu Hospital",
+    address: "4200 Phaya Thai Rd, Wang Mai, Pathum Wan, Bangkok 16690",
+    expertist: "Dentist",
+    tel: "-",
+    picture: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setDentist((prev) => ({ ...prev, [name]: value }));
   };
-}
 
-export default async function NewDentistPage({ params }: DentistPageProps) {
-  const dentistID = params.id;
-
-  const res = await findDentistByID(dentistID);
-  if (!res) {
-    return <div>Failed to fetch dentist</div>;
-  }
-  const dentist = res.data;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const res = await createDentist(dentist, session?.user.token);
+    console.log("Dentist Created:", res);
+  };
 
   return (
-    <main className="mt-[10vh] px-[10vw]">
-      <Link href="/dentists" className="flex w-[100px] items-center gap-2">
-        <FaChevronLeft /> Go back
-      </Link>
-      <div className="flex h-[90vh] gap-8">
-        <div className="w-[60%]">
-          <h1 className="mt-[15vh] text-5xl font-bold">{dentist.name}</h1>
-          <h3 className="mt-4 text-xl text-gray-500">{dentist.expertist}</h3>
-          <p className="text-md mt-2">Tel: {dentist.tel}</p>
-          <h2 className="mt-12 text-2xl font-bold">Affiliated hospital</h2>
-          <h3 className="mt-4 text-xl">{dentist.hospital}</h3>
-          <p className="text-md text-gray-500">{dentist.address}</p>
-        </div>
-        <div className="flex w-[40%] flex-col items-center">
-          <Image
-            className="h-[400px] w-[400px] object-cover"
-            src={dentist.picture}
-            alt="banner"
-            width={400}
-            height={400}
-            unoptimized
-          />
-        </div>
-      </div>
-    </main>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        maxWidth: 500,
+        margin: "0 auto",
+        mt: 4,
+        mb: 8,
+      }}
+    >
+      <Typography variant="h4" align="center" gutterBottom>
+        Create a Dentist
+      </Typography>
+      <TextField
+        label="Name"
+        name="name"
+        value={dentist.name}
+        onChange={handleChange}
+        required
+      />
+      <TextField
+        label="Hospital"
+        name="hospital"
+        value={dentist.hospital}
+        onChange={handleChange}
+        required
+      />
+      <TextField
+        label="Address"
+        name="address"
+        value={dentist.address}
+        onChange={handleChange}
+        multiline
+        rows={2}
+        required
+      />
+      <TextField
+        label="Expertise"
+        name="expertist"
+        value={dentist.expertist}
+        onChange={handleChange}
+      />
+      <TextField
+        label="Telephone"
+        name="tel"
+        value={dentist.tel}
+        onChange={handleChange}
+      />
+      <TextField
+        label="Picture URL"
+        name="picture"
+        value={dentist.picture}
+        onChange={handleChange}
+        required
+      />
+      <Button variant="contained" type="submit">
+        Submit
+      </Button>
+    </Box>
   );
 }
