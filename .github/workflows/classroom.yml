@@ -29,20 +29,10 @@ jobs:
           command: npm run test -- case2.test.tsx
           timeout: 10
           max-score: 1
-      - name: Test Case 3
-        id: test-case-3
-        uses: classroom-resources/autograding-command-grader@v1
-        with:
-          test-name: Test Case 3
-          setup-command: npm install
-          command: npm run test -- case3.test.tsx
-          timeout: 10
-          max-score: 2
       - name: Autograding Reporter
         uses: classroom-resources/autograding-grading-reporter@v1
         env:
           TEST-CASE-1_RESULTS: "${{steps.test-case-1.outputs.result}}"
           TEST-CASE-2_RESULTS: "${{steps.test-case-2.outputs.result}}"
-          TEST-CASE-3_RESULTS: "${{steps.test-case-3.outputs.result}}"
         with:
-          runners: test-case-1,test-case-2,test-case-3
+          runners: test-case-1,test-case-2

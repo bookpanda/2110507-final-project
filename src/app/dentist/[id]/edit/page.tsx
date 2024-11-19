@@ -102,6 +102,7 @@ export default function EditDentistPage({ params }: DentistPageProps) {
         value={dentist.name}
         onChange={handleChange}
         required
+        data-testid="name"
       />
       <TextField
         label="Hospital"
@@ -109,27 +110,31 @@ export default function EditDentistPage({ params }: DentistPageProps) {
         value={dentist.hospital}
         onChange={handleChange}
         required
+        data-testid="hospital"
       />
       <TextField
         label="Address"
         name="address"
         value={dentist.address}
         onChange={handleChange}
-        multiline
-        rows={2}
         required
+        data-testid="address"
       />
       <TextField
         label="Expertise"
         name="expertist"
         value={dentist.expertist}
         onChange={handleChange}
+        required
+        data-testid="expertise"
       />
       <TextField
         label="Telephone"
         name="tel"
         value={dentist.tel}
         onChange={handleChange}
+        required
+        data-testid="tel"
       />
       <TextField
         label="Picture URL"
@@ -137,6 +142,7 @@ export default function EditDentistPage({ params }: DentistPageProps) {
         value={dentist.picture}
         onChange={handleChange}
         required
+        data-testid="picture"
       />
       <Button variant="contained" type="submit">
         Update Dentist
