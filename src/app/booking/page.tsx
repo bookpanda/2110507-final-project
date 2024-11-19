@@ -22,7 +22,6 @@ export default function Booking() {
   const [id, setId] = useState<string>("");
   const [dentist, setDentist] = useState<string>("");
 
-  // Fetch dentists on component mount
   useEffect(() => {
     const fetchDentists = async () => {
       try {
