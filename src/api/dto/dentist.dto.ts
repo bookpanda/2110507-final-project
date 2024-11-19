@@ -1,4 +1,4 @@
-import { Booking, Dentist } from "@/types";
+import { Dentist } from "@/types";
 
 export type CreateDentistDto = {
   name: string;
