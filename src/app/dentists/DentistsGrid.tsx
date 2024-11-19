@@ -60,8 +60,8 @@ export const DentistsGridSuspense = async () => {
 
   return (
     <div className="grid grid-cols-3 gap-4">
-      {dentists.map((_) => (
-        <div className="flex h-[35vh] flex-col items-center">
+      {dentists.map((_, index) => (
+        <div key={index} className="flex h-[35vh] flex-col items-center">
           <div className="h-[150px] w-[150px] rounded-full bg-gray-300"></div>
         </div>
       ))}
