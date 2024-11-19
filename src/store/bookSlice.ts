@@ -1,10 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { PayloadAction } from "@reduxjs/toolkit";
-type BookState={
-    bookItems:bookItem[];
-}
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+type BookState = {
+  bookItems: bookItem[];
+};
 
-const initialState:BookState={bookItems:[]};
+const initialState: BookState = { bookItems: [] };
 
 export const bookSlice = createSlice({
   name: "book",
@@ -15,10 +14,8 @@ export const bookSlice = createSlice({
         (item) => item._id === action.payload._id
       );
       if (index !== -1) {
-        
         state.bookItems[index] = action.payload;
       } else {
-       
         state.bookItems.push(action.payload);
       }
     },
@@ -30,5 +27,5 @@ export const bookSlice = createSlice({
   },
 });
 
-export const{addBooking,removeBooking}=bookSlice.actions
-export default bookSlice.reducer
+export const { addBooking, removeBooking } = bookSlice.actions;
+export default bookSlice.reducer;
