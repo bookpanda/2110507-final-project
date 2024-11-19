@@ -1,5 +1,6 @@
 import { API_URL } from "@/config/config";
 import { Dentist } from "@/types";
+import { getSession } from "next-auth/react";
 import {
   CreateDentistDto,
   FindAllDentistDto,
@@ -10,11 +11,17 @@ import {
 export const createDentist = async (
   dentist: CreateDentistDto
 ): Promise<Dentist | undefined> => {
+  const session = await getSession();
+  if (!session) {
+    throw new Error("Not authenticated");
+  }
+
   try {
     const response = await fetch(`${API_URL}/api/v1/dentists`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${session.user.token}`,
       },
       body: JSON.stringify(dentist),
     });
@@ -69,11 +76,17 @@ export const updateDentist = async (
   id: string,
   dentist: UpdateDentistDto
 ): Promise<Dentist | undefined> => {
+  const session = await getSession();
+  if (!session) {
+    throw new Error("Not authenticated");
+  }
+
   try {
     const response = await fetch(`${API_URL}/api/v1/dentists/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${session.user.token}`,
       },
       body: JSON.stringify(dentist),
     });
@@ -89,11 +102,17 @@ export const updateDentist = async (
 };
 
 export const deleteDentist = async (id: string): Promise<void> => {
+  const session = await getSession();
+  if (!session) {
+    throw new Error("Not authenticated");
+  }
+
   try {
     const response = await fetch(`${API_URL}/api/v1/dentists/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${session.user.token}`,
       },
     });
 

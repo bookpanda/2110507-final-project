@@ -1,41 +1,41 @@
 interface HospitalItem {
-    _id: string,
-    name: string,
-    address: string,
-    district: string,
-    province: string,
-    postalcode: string,
-    tel: string,
-    picture: string,
-    __v: number,
-    id: string
-  }
-  
-  interface HospitalJson {
-    success: boolean,
-    count: number,
-    pagination: Object,
-    data: HospitalItem[]
-  }
+  _id: string;
+  name: string;
+  address: string;
+  district: string;
+  province: string;
+  postalcode: string;
+  tel: string;
+  picture: string;
+  __v: number;
+  id: string;
+}
 
-  interface bookItem{
- _id:string;
- bookDate:string;
-dentist: string,
-  }
+interface HospitalJson {
+  success: boolean;
+  count: number;
+  pagination: Object;
+  data: HospitalItem[];
+}
 
-  interface Dentist{
-    _id:string;
+interface bookItem {
+  _id: string;
+  bookDate: string;
+  dentist: string;
+}
 
-name:string;
+interface Dentist {
+  _id: string;
 
-hospital:string;
+  name: string;
 
-address:string;
+  hospital: string;
 
-expertist:string;
+  address: string;
 
-tel:string;
+  expertist: string;
 
-picture:string;
-  }
+  tel: string;
+
+  picture: string;
+}
