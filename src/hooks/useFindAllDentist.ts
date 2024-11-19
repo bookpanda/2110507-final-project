@@ -1,4 +1,4 @@
-import { findAllDentist } from "@/api/dentist";
+import { findAllDentist } from "@/app/api/dentist";
 import { addDentists, selectDentists } from "@/store/dentistSlice";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";

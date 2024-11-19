@@ -1,4 +1,4 @@
-import { findDentistByID } from "@/api/dentist";
+import { findDentistByID } from "@/app/api/dentist";
 import Image from "next/image";
 import Link from "next/link";
 import { FaChevronLeft } from "react-icons/fa6";
