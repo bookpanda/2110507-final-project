@@ -1,6 +1,7 @@
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import userLogIn from "../../../../libs/userLogIn";
+import { getAuthProfile } from "../../user";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -22,7 +23,10 @@ export const authOptions: AuthOptions = {
 
         if (user) {
           // Any object returned will be saved in `user` property of the JWT
-          return user;
+          const profile = await getAuthProfile(user.token);
+          if (!profile) return null;
+
+          return { ...user, role: profile.data.role };
         } else {
           // If you return null then an error will be displayed advising the user to check their details.
           return null;
@@ -35,10 +39,14 @@ export const authOptions: AuthOptions = {
   session: { strategy: "jwt" },
   callbacks: {
     async jwt({ token, user }) {
+      if (user) {
+        token.role = user.role;
+      }
       return { ...token, ...user };
     },
     async session({ session, token, user }) {
-      session.user = token as any;
+      session.user = token;
+
       return session;
     },
   },

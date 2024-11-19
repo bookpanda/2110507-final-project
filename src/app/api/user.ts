@@ -1,9 +1,9 @@
 import { API_URL } from "@/config/config";
-import { User } from "@/types";
+import { GetAuthProfileDto } from "./dto/user.dto";
 
 export const getAuthProfile = async (
   token: string
-): Promise<User | undefined> => {
+): Promise<GetAuthProfileDto | undefined> => {
   try {
     const response = await fetch(`${API_URL}/api/v1/auth/me`, {
       method: "GET",
