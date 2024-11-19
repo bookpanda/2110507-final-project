@@ -1,8 +1,8 @@
 "use client";
 
 import DateReserve from "@/components/DateReserve";
-import { AppDispatch } from "@/redux/store";
 import { addBooking } from "@/store/bookSlice";
+import { AppDispatch } from "@/store/store";
 import { Dentist } from "@/types";
 import { FormControl, MenuItem, Select, TextField } from "@mui/material";
 import { Dayjs } from "dayjs";
