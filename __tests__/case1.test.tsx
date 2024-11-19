@@ -1,118 +1,172 @@
-import { findAllDentist } from "@/app/api/dentist";
-import DentistsPage from "@/app/dentists/page";
-import { render, screen, waitFor } from "@testing-library/react";
-import { getServerSession } from "next-auth";
+import { createDentist } from "@/app/api/dentist";
+import NewDentistPage from "@/app/dentists/new/page";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { useSession } from "next-auth/react";
 
-jest.mock("next-auth", () => ({
-  getServerSession: jest.fn(),
+jest.mock("next-auth/react", () => ({
+  useSession: jest.fn(),
 }));
 
 jest.mock("@/app/api/dentist", () => ({
-  findAllDentist: jest.fn(),
+  createDentist: jest.fn(),
 }));
 
-describe("DentistsGrid", () => {
-  it("renders the list of dentists correctly for admin", async () => {
-    // Mock the session to be an admin
-    (getServerSession as jest.Mock).mockResolvedValue({
-      user: { role: "admin" },
-    });
+describe("NewDentistPage", () => {
+  let mockSession;
 
-    (findAllDentist as jest.Mock).mockResolvedValue({
-      data: [
-        {
-          _id: "1",
-          name: "Dr. John Doe",
-          hospital: "Hospital 1",
-          address: "123 Main St",
-          expertist: "Oral Surgeon",
-          tel: "123-456-7890",
-          picture: "https://example.com/picture.jpg",
-        },
-        {
-          _id: "2",
-          name: "Dr. Jane Smith",
-          hospital: "Hospital 2",
-          address: "456 Elm St",
-          expertist: "Dentist",
-          tel: "123-456-7890",
-          picture: "https://example.com/picture2.jpg",
-        },
-      ],
-    });
-
-    render(<DentistsPage />);
-    // render(
-    //   <Suspense fallback={<DentistsGridSuspense />}>
-    //     <DentistsGrid />
-    //   </Suspense>
-    // );
-
-    await waitFor(() => screen.getByText("Dr. John Doe"));
-    await waitFor(() => screen.getByText("Dr. Jane Smith"));
-
-    // Assert that dentist names and roles are rendered
-    expect(screen.getByText("Dr. John Doe")).toBeInTheDocument();
-    expect(screen.getByText("Oral Surgeon")).toBeInTheDocument();
-    expect(screen.getByText("Dr. Jane Smith")).toBeInTheDocument();
-    expect(screen.getByText("Dentist")).toBeInTheDocument();
-
-    // Assert that the "See Profile" and "Edit" buttons are displayed for an admin user
-    expect(screen.getByText("See Profile")).toBeInTheDocument();
-    expect(screen.getByText("Edit")).toBeInTheDocument();
+  beforeEach(() => {
+    mockSession = {
+      data: { user: { token: "mock-token" } },
+      status: "authenticated",
+    };
+    (useSession as jest.Mock).mockReturnValue(mockSession);
   });
 
-  //   it("renders the list of dentists correctly for a non-admin user", async () => {
-  //     // Mock the session to be a non-admin user
-  //     (getServerSession as jest.Mock).mockResolvedValue({
-  //       user: { role: "user" },
-  //     });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-  //     // Mock the findAllDentist response
-  //     (findAllDentist as jest.Mock).mockResolvedValue({
-  //       data: [
-  //         {
-  //           _id: "1",
-  //           name: "Dr. John Doe",
-  //           expertist: "Oral Surgeon",
-  //           picture: "https://example.com/picture.jpg",
-  //         },
-  //       ],
-  //     });
+  test("renders the form and submits correctly", async () => {
+    const mockCreateDentist = createDentist as jest.MockedFunction<
+      typeof createDentist
+    >;
+    mockCreateDentist.mockResolvedValue({
+      _id: "1",
+      name: "Dr. John Doe",
+      hospital: "Super Hospital",
+      address: "1234 Some Street",
+      expertist: "Oral Surgeon",
+      tel: "123-456-7890",
+      picture: "https://example",
+    });
 
-  //     // Render the DentistsGrid component
-  //     render(<DentistsGrid />);
+    render(<NewDentistPage />);
 
-  //     // Wait for dentists to be rendered
-  //     await waitFor(() => screen.getByText("Dr. John Doe"));
+    expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/hospital/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/address/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/expertise/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/telephone/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/picture url/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /submit/i })).toBeInTheDocument();
 
-  //     // Assert that dentist name and role are rendered
-  //     expect(screen.getByText("Dr. John Doe")).toBeInTheDocument();
-  //     expect(screen.getByText("Oral Surgeon")).toBeInTheDocument();
+    const fieldName = screen.getByTestId("name").querySelector("input");
+    expect(fieldName).toBeInTheDocument();
+    fireEvent.change(fieldName as Element, {
+      target: { value: "Dr. John Doe" },
+    });
 
-  //     // Assert that the "See Profile" button is displayed, but "Edit" is not visible for a non-admin
-  //     expect(screen.getByText("See Profile")).toBeInTheDocument();
-  //     expect(screen.queryByText("Edit")).toBeNull();
-  //   });
+    const fieldHospital = screen.getByTestId("hospital").querySelector("input");
+    expect(fieldHospital).toBeInTheDocument();
+    fireEvent.change(fieldHospital as Element, {
+      target: { value: "Super Hospital" },
+    });
 
-  //   it("displays an error message if fetching dentists fails", async () => {
-  //     // Mock the session to be an admin
-  //     (getServerSession as jest.Mock).mockResolvedValue({
-  //       user: { role: "admin" },
-  //     });
+    const fieldAddress = screen.getByTestId("address").querySelector("input");
+    expect(fieldAddress).toBeInTheDocument();
+    fireEvent.change(fieldAddress as Element, {
+      target: { value: "1234 Some Street" },
+    });
 
-  //     // Mock the findAllDentist to throw an error
-  //     (findAllDentist as jest.Mock).mockRejectedValue(
-  //       new Error("Failed to fetch dentists")
-  //     );
+    const fieldExpertise = screen
+      .getByTestId("expertise")
+      .querySelector("input");
+    expect(fieldExpertise).toBeInTheDocument();
+    fireEvent.change(fieldExpertise as Element, {
+      target: { value: "Oral Surgeon" },
+    });
 
-  //     // Render the DentistsGrid component
-  //     render(<DentistsGrid />);
+    const fieldTelephone = screen.getByTestId("tel").querySelector("input");
+    expect(fieldTelephone).toBeInTheDocument();
+    fireEvent.change(fieldTelephone as Element, {
+      target: { value: "123-456-7890" },
+    });
 
-  //     // Wait for the error message to be rendered
-  //     await waitFor(() => screen.getByText("Failed to fetch dentists"));
+    const fieldPicture = screen.getByTestId("picture").querySelector("input");
+    expect(fieldPicture).toBeInTheDocument();
+    fireEvent.change(fieldPicture as Element, {
+      target: { value: "https://example.com/pic.jpg" },
+    });
 
-  //     // Assert that the error message is shown
-  //     expect(screen.getByText("Failed to fetch dentists")).toBeInTheDocument();
-  //   });
+    expect(screen.getByLabelText(/name/i)).toHaveValue("Dr. John Doe");
+    expect(screen.getByLabelText(/address/i)).toHaveValue("1234 Some Street");
+    expect(screen.getByLabelText(/hospital/i)).toHaveValue("Super Hospital");
+    expect(screen.getByLabelText(/expertise/i)).toHaveValue("Oral Surgeon");
+    expect(screen.getByLabelText(/telephone/i)).toHaveValue("123-456-7890");
+    expect(screen.getByLabelText(/picture url/i)).toHaveValue(
+      "https://example.com/pic.jpg"
+    );
+
+    const submitButton = screen.getByRole("button", { name: /submit/i });
+    expect(submitButton).toBeInTheDocument();
+    await userEvent.click(submitButton);
+
+    // Wait for the API call to complete
+    expect(createDentist).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(createDentist).toHaveBeenCalledTimes(1));
+    expect(createDentist).toHaveBeenCalledWith(
+      {
+        name: "Dr. John Doe",
+        hospital: "Super Hospital",
+        address: "1234 Some Street",
+        expertist: "Oral Surgeon",
+        tel: "123-456-7890",
+        picture: "https://example.com/pic.jpg",
+      },
+      "mock-token"
+    );
+  });
+
+  test("shows an error message when API call fails", async () => {
+    (createDentist as jest.Mock).mockRejectedValue(
+      new Error("Failed to create dentist")
+    );
+
+    render(<NewDentistPage />);
+
+    const fieldName = screen.getByTestId("name").querySelector("input");
+    expect(fieldName).toBeInTheDocument();
+    fireEvent.change(fieldName as Element, {
+      target: { value: "Dr. John Doe" },
+    });
+
+    const fieldHospital = screen.getByTestId("hospital").querySelector("input");
+    expect(fieldHospital).toBeInTheDocument();
+    fireEvent.change(fieldHospital as Element, {
+      target: { value: "Super Hospital" },
+    });
+
+    const fieldAddress = screen.getByTestId("address").querySelector("input");
+    expect(fieldAddress).toBeInTheDocument();
+    fireEvent.change(fieldAddress as Element, {
+      target: { value: "1234 Some Street" },
+    });
+
+    const fieldExpertise = screen
+      .getByTestId("expertise")
+      .querySelector("input");
+    expect(fieldExpertise).toBeInTheDocument();
+    fireEvent.change(fieldExpertise as Element, {
+      target: { value: "Oral Surgeon" },
+    });
+
+    const fieldTelephone = screen.getByTestId("tel").querySelector("input");
+    expect(fieldTelephone).toBeInTheDocument();
+    fireEvent.change(fieldTelephone as Element, {
+      target: { value: "123-456-7890" },
+    });
+
+    const fieldPicture = screen.getByTestId("picture").querySelector("input");
+    expect(fieldPicture).toBeInTheDocument();
+    fireEvent.change(fieldPicture as Element, {
+      target: { value: "https://example.com/pic.jpg" },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /submit/i }));
+
+    await waitFor(() =>
+      expect(screen.getByText(/failed to create dentist/i)).toBeInTheDocument()
+    );
+  });
 });

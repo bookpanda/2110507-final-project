@@ -28,6 +28,7 @@ export const createDentist = async (
     return response.json();
   } catch (error) {
     console.error(error);
+    throw new Error("Failed to create dentist");
   }
 };
 
