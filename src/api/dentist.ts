@@ -4,6 +4,7 @@ import {
   CreateDentistDto,
   FindAllDentistDto,
   FindDentistByIDDto,
+  UpdateDentistDto,
 } from "./dto/dentist.dto";
 
 export const createDentist = async (
@@ -56,6 +57,48 @@ export const findDentistByID = async (
 
     if (!response.ok) {
       throw new Error(`Failed to find dentist by ID: ${response.statusText}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const updateDentist = async (
+  id: string,
+  dentist: UpdateDentistDto
+): Promise<Dentist | undefined> => {
+  try {
+    const response = await fetch(`${API_URL}/api/v1/dentists/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dentist),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to update dentist: ${response.statusText}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const deleteDentist = async (id: string): Promise<void> => {
+  try {
+    const response = await fetch(`${API_URL}/api/v1/dentists/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete dentist: ${response.statusText}`);
     }
 
     return response.json();
