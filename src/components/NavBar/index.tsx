@@ -5,7 +5,7 @@ import { NavBarItem } from "./NavBarItem";
 
 export const NavBar = async () => {
   const session = await getServerSession(authOptions);
-  const isAdmin = false;
+  const isAdmin = true;
 
   return (
     <div className="sticky top-0 z-50 flex h-16 w-full justify-around border-b bg-white">
@@ -16,7 +16,7 @@ export const NavBar = async () => {
           <NavBarItem name="Login" path="/api/auth/signin" />
         )}
         {isAdmin ? (
-          <NavBarItem name="Edit Dentists" path="/dentist" />
+          <NavBarItem name="Create new dentist" path="/dentists/new" />
         ) : (
           <NavBarItem name="My Bookings" path="/mybooking" />
         )}
