@@ -1,7 +1,8 @@
+import { API_URL } from "@/config/config";
 import { getSession } from "next-auth/react";
 
 // Remove booking function
-export default async function removeBooking(bookingid: string) {
+export default async function makeBooking(bookingid: string) {
   // Retrieve the session (client-side session)
   const session = await getSession();
 
@@ -16,18 +17,22 @@ export default async function removeBooking(bookingid: string) {
     throw new Error("Not authenticated");
   }
 
+  // Request body
+  const requestBody = {
+    user: session.user._id.toString(),
+  }
+ 
+   
   try {
     // Send DELETE request to backend API
-    const response = await fetch(
-      `https://final-project-backend-mocha.vercel.app/api/v1/bookings/${bookingid}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.user.token}`, // Use the token from the session
-        },
-      }
-    );
+    const response = await fetch(`${API_URL}/api/v1/bookings/${bookingid}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.user.token}`,  // Use the token from the session
+      },
+      body: JSON.stringify(requestBody),
+    });
 
     // Check if response is OK (status code 2xx)
     if (!response.ok) {
