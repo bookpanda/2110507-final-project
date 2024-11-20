@@ -30,6 +30,9 @@ export const NavBar = async () => {
          {isAdmin &&
           <NavBarItem name="Register" path="/registerA" />
         }
+         {isAdmin &&
+          <NavBarItem name="Manage Booking" path="/manageBooking" />
+        }
         {isAdmin && (
           <NavBarItem name="Create new dentist" path="/dentists/new" />
         )}

@@ -161,45 +161,7 @@ export default function ManageBooking() {
 
   return (
     <main className="w-[100%] flex flex-col items-center space-y-4">
-      <div className="text-xl font-medium">Create New Booking</div>
-      <div className="w-fit space-y-2">
-        <FormControl variant="standard" className="w-auto space-y-3 bg-gray-100">
-          <div className="text-md text-left text-gray-600">Doctor</div>
-          <Select
-            variant="standard"
-            name="hospital"
-            id="hospital"
-            className="w-auto h-[2em]"
-            value={hospital}
-            onChange={(e) => setHospital(e.target.value)}
-          >
-            {dentists.map((dentist: any) => (
-              <MenuItem key={dentist._id} value={dentist._id}>
-                {dentist._id}
-              </MenuItem>
-            ))}
-          </Select>
-          <DateReserve
-  selectedDate={date} // Pass the selected date
-  onDateChange={(value: Dayjs | null) => setDate(value)} // Update handler to accept `Dayjs | null`
-/>
-<TimeReserve
-  selectedTime={time} // Pass the selected time
-  onDateChange={(value: Dayjs | null) => setTime(value)} // Update handler to accept `Dayjs | null`
-/><TimeReserve
-  selectedTime={time} // Pass the selected time
-  onDateChange={(value: Dayjs | null) => setTime2(value)} // Update handler to accept `Dayjs | null`
-/>
-         
-          <button
-            name="Book Vaccine"
-            onClick={handleBooking}
-            className="block rounded-md bg-sky-600 hover:bg-indigo-600 px-3 py-2 shadow-sm text-white"
-          >
-            Book Vaccine
-          </button>
-        </FormControl>
-      </div>
+      <div className="text-xl font-medium">Create Delete Booking</div>
       <div className="w-fit space-y-2">
         <FormControl variant="standard" className="w-auto space-y-3 bg-gray-100">
           <div className="text-md text-left text-gray-600">Doctor</div>

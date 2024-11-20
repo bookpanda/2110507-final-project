@@ -11,6 +11,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { findAllDentist } from "../api/dentist";
+import deleteB from "@/libs/DeleteB";
 
 export default function ManageBooking() {
   const [dentists, setDentists] = useState<Dentist[]>([]);
@@ -72,6 +73,21 @@ export default function ManageBooking() {
     try {
       await editBooking(selectedBooking, user, combinedDateTime, dentist);
       alert("Booking updated successfully!");
+      window.location.reload(); // Refresh the page after successful update
+    } catch (err) {
+      console.error(err);
+      alert("An error occurred while updating the booking.");
+    }
+  };
+
+  const handleUpdateBooking2 = async () => {
+   
+
+  
+
+    try {
+      await deleteB(selectedBooking);
+      alert("Booking Delete successfully!");
       window.location.reload(); // Refresh the page after successful update
     } catch (err) {
       console.error(err);
@@ -215,6 +231,13 @@ export default function ManageBooking() {
             color="primary"
           >
             Update Booking
+          </Button>
+          <Button
+            onClick={handleUpdateBooking2} 
+            variant="contained"
+            color="primary"
+          >
+            Delete Booking
           </Button>
         </FormControl>
       </div>
