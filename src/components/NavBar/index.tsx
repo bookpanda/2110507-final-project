@@ -44,6 +44,7 @@ export const NavBar = async () => {
             </div>
           </>
         )}
+        <NavBarItem name="Dentist" path="/dentists" />
         <Logo />
       </div>
     </div>
