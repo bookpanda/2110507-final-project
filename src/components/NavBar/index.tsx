@@ -18,20 +18,27 @@ export const NavBar = async () => {
 
   return (
     <div className="sticky top-0 z-50 flex h-16 w-full justify-around border-b bg-white">
-      <div className="flex w-[20%] items-center">
+      <div className="flex w-[30%] items-center">
         {session ? (
           <NavBarItem name="Logout" path="/api/auth/signout" />
         ) : (
           <NavBarItem name="Login" path="/api/auth/signin" />
         )}
-        {isAdmin ? (
-          <NavBarItem name="Edit Dentists" path="/dentist" />
-        ) : (
-          <NavBarItem name="My Bookings" path="/mybooking" />
+        {isAdmin && (
+          <NavBarItem name="Create new dentist" path="/dentists/new" />
         )}
+        <NavBarItem
+          name={isAdmin ? "All bookings" : "My bookings"}
+          path="/mybooking"
+        />
       </div>
-      <div className="flex w-[40%] items-center justify-between md:w-[20%]">
+      <div className="flex w-[40%] items-center justify-between md:w-[30%]">
         <NavBarItem name="Book an appointment" path="/booking" />
+        {session && (
+          <div className="text-lightgray flex h-full items-center px-3">
+            {session.user.name}
+          </div>
+        )}
         <Logo />
       </div>
     </div>

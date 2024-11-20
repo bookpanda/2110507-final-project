@@ -5,11 +5,11 @@ import { getSession } from "next-auth/react";
 export default async function makeBooking(bookingid: string) {
   // Retrieve the session (client-side session)
   const session = await getSession();
-  
+
   // Check if session exists and if it contains the necessary token
   if (!session || !session.user?.token) {
     console.error("No session or token found");
-    return null;  // Or handle the failure as needed (e.g., show an error message)
+    return null; // Or handle the failure as needed (e.g., show an error message)
   }
 
   // If session is invalid, throw an error
@@ -46,13 +46,16 @@ export default async function makeBooking(bookingid: string) {
 
     // Return the result data (or handle it as needed)
     return result.data;
-  }  catch (error) {
+  } catch (error) {
     // Log the error and rethrow
     if (error instanceof Error) {
-      console.error("Error deleting booking:", error.message);  // Accessing .message safely
+      console.error("Error deleting booking:", error.message); // Accessing .message safely
     } else {
       // If error is not an instance of Error, it could be any other type (e.g., string)
-      console.error("An unknown error occurred while deleting the booking:", error);
+      console.error(
+        "An unknown error occurred while deleting the booking:",
+        error
+      );
     }
   }
 }

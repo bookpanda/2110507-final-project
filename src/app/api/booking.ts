@@ -10,6 +10,7 @@ import { API_URL } from "@/config/config";
 export const fetchBookings = async (dentistId: string): Promise<any> => {
   const query = dentistId ? `?dentistId=${dentistId}` : '';
   const session = await getSession();
+
   if (!session) {
     throw new Error("Not authenticated");
   }
@@ -58,7 +59,7 @@ export const fetchFBookings = async (dentistId: string): Promise<any> => {
       throw new Error(errorData.message || "Failed to fetch free bookings");
     }
 
-    return response.json();
+    return await response.json();
   } catch (error: any) {
     console.error("Error fetching free bookings:", error.message);
     throw error;
