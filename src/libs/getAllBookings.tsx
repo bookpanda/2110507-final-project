@@ -31,8 +31,14 @@ export default async function getAllBookings() {
 
     // Parse and return the JSON response
     return await response.json();
-  } catch (error) {
-    console.error("Error fetching bookings:", error.message);
-    throw error;
+  } catch (error: unknown) { // Use `unknown` to ensure proper type safety
+    if (error instanceof Error) {
+      // If the error is an instance of the built-in Error class
+      console.error("Error fetching bookings:", error.message);
+    } else {
+      // Handle other unexpected error types
+      console.error("Unexpected error fetching bookings:", error);
+    }
+    throw error; // Re-throw the error to propagate it
   }
 }

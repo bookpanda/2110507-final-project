@@ -29,10 +29,16 @@ export default async function loadUsers() {
       // Parse the response and return only the `data` array
       const responseData = await response.json();
       return responseData.data; // Return only the array of users
-    } catch (error) {
-      console.error("Error loading users:", error.message);
-      throw error;
-    }
+    } catch (error: unknown) { // Use `unknown` to ensure proper type safety
+        if (error instanceof Error) {
+          // If the error is an instance of the built-in Error class
+          console.error("Error fetching bookings:", error.message);
+        } else {
+          // Handle other unexpected error types
+          console.error("Unexpected error fetching bookings:", error);
+        }
+        throw error; // Re-throw the error to propagate it
+      }
   }
   
   
