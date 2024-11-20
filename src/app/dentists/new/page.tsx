@@ -26,11 +26,9 @@ export default function NewDentistPage() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log("Dentist:", dentist);
     e.preventDefault();
     try {
       const res = await createDentist(dentist, session?.user.token);
-      console.log("Dentist Created:", res);
     } catch (error: any) {
       setError(error.message);
     }
