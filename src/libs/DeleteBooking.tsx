@@ -15,8 +15,8 @@ export default async function deleteBookings(timebefore:Dayjs,timeafter:Dayjs, d
 
     // Request body
     const requestBody = {
-        bookingDate: "2023-08-20",
-        user: "000000000000000000000000",
+        timeBefore: timebefore,
+        timeAfter: timeafter,
         dentist: dentistId,
        
       }
@@ -24,7 +24,7 @@ export default async function deleteBookings(timebefore:Dayjs,timeafter:Dayjs, d
 
     // Send the request to the server
     const response = await fetch(`${API_URL}/api/v1/bookings`, {
-      method: "POST",
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session.user.token}`, // Assuming session includes `token`

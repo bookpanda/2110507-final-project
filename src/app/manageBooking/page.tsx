@@ -231,14 +231,14 @@ export default function ManageBooking() {
             
           <button
             name="Book Vaccine"
-            onClick={handleBooking2}
+            onClick={handleBooking}
             className="block rounded-md bg-sky-600 hover:bg-indigo-600 px-3 py-2 shadow-sm text-white"
           >
             Create Booking
           </button>
           <button
             name="Book Vaccine"
-            onClick={handleBooking}
+            onClick={handleBooking2}
             className="block rounded-md bg-sky-600 hover:bg-indigo-600 px-3 py-2 shadow-sm text-white"
           >
             Delete Booking
