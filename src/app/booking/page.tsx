@@ -4,169 +4,245 @@ import { FormControl, TextField, Select, MenuItem } from "@mui/material";
 import DateReserve from "@/components/DateReserve";
 import { useState, useEffect } from "react";
 import dayjs, { Dayjs } from "dayjs";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
-import { addBooking } from "@/redux/features/bookSlice";
 import { findAllDentist } from "../api/dentist";
-import { fetchBookings } from "../api/booking copy";
-import { Dentist } from "@/types";
+import { fetchBookings, fetchFBookings} from "../api/booking";
+import makeBooking from "@/libs/makeBookings";
+import TimeReserve from "@/components/TimeReserve";
+import removeBooking from "../../libs/removeBooking";
 
 export default function Booking() {
-  const [dentists, setDentists] = useState<Dentist[]>([]);
+  const [dentists, setDentists] =  useState<Dentist[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const [date, setDate] = useState<Dayjs | null>(null);
-  const [filteredBookings, setFilteredBookings] = useState<any[]>([]); // Track filtered bookings
-  const dispatch = useDispatch<AppDispatch>();
-  const [name, setName] = useState<string>("");
-  const [lastName, setLastName] = useState<string>("");
-  const [id, setId] = useState<string>("");
-  const [hospital, setHospital] = useState<string>("");
+  const [filteredBookings, setFilteredBookings] = useState([]);
+  const [timeOptions, setTimeOptions] = useState<{ time: string; dentistId: string }[]>([]);
+  const [time, setTime] = useState("");
+  const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [id, setId] = useState("");
+  const [dentist, setDentist] = useState("");
+  const [ok, setOk] = useState(true);
+  const [userBooking, setUserBooking] = useState<any>(null);
 
-  // Fetch dentists on component mount
   useEffect(() => {
-    const fetchDentists = async () => {
+    const fetchDentistsData = async () => {
       try {
         const res = await findAllDentist();
         if (!res || !res.data) {
           throw new Error("Failed to fetch dentists");
         }
         setDentists(res.data);
-        console.log(res.data);
       } catch (err: any) {
-        setError(err.message || "An error occurred");
+        setError(err.message || "An error occurred while fetching dentists");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDentists();
+    fetchDentistsData();
   }, []);
 
-  const [bookingItems, setBookingItems] = useState<any[]>([]);
-
-  // Fetch bookings and filter them based on the date when it changes
   useEffect(() => {
-    const loadBookings = async () => {
+    const checkFBookings = async () => {
       try {
-        const res = await fetchBookings(""); // Call your API function
-        if (!res || !res.data) {
-          throw new Error("Failed to fetch bookings");
-        }
-        setBookingItems(res.data);
-        // Initially, display all bookings if no date is selected
-        if (!date) {
+        const res = await fetchFBookings("");
+        if (res && res.data) {
           setFilteredBookings(res.data);
         }
       } catch (err: any) {
-        setError(err.message || "An error occurred while fetching bookings");
+        setError(err.message || "An error occurred while checking available bookings");
       } finally {
         setLoading(false);
       }
     };
 
-    loadBookings();
-  }, [date]); // Trigger on date change
+    checkFBookings();
+  }, []);
 
   useEffect(() => {
-    // If there's a selected date, filter the bookings by that date
-    if (date) {
-      const filtered = bookingItems.filter((booking: any) => 
-        dayjs(booking.bookingDate).isSame(date, 'day')
-      );
-      setFilteredBookings(filtered);
-    } else {
-      setFilteredBookings(bookingItems); // No date selected, show all
-    }
-  }, [date, bookingItems]); // Filter when either date or bookingItems change
-
-  const makeBooking = (_id: string, bookDate: string, dentist: string) => {
-    const item = {
-      _id: _id,
-      bookDate: bookDate,
-      dentist: dentist,
+    const checkBookings = async () => {
+      try {
+        const res = await fetchBookings("");
+        if (res && res.data && res.data.length > 0) {
+          setOk(false); // User already has a booking
+          setUserBooking(res.data[0]); // Assuming only one booking per user
+        }
+      } catch (err: any) {
+        setError(err.message || "An error occurred while checking bookings");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    dispatch(addBooking(item));
+    checkBookings();
+  }, []);
+
+  useEffect(() => {
+    // Update available times based on `filteredBookings`, selected date, and dentist
+    if (date && dentist) {
+      const availableTimes = filteredBookings
+        .filter(
+          (booking: any) =>
+            dayjs(booking.bookingDate).isSame(date, "day") &&
+            booking.dentist._id === dentist
+        )
+        .map((booking: any) => ({
+          time: dayjs(booking.bookingDate).format("HH:mm"),
+          dentistId: booking._id,
+        }))
+        .sort((a, b) => (a.time > b.time ? 1 : -1)); // Sort times in ascending order
+      setTimeOptions(availableTimes);
+    } else {
+      setTimeOptions([]); // Reset if date or dentist is not selected
+    }
+  }, [date, dentist, filteredBookings]);
+  
+
+  const makeBookings = () => {
+    if (!dentist || !date || !time) {
+      window.alert("Please fill all fields, select a date, and choose a time!");
+      return;
+    }
+
+    const booking = {
+      
+    };
+    makeBooking(time)
+
+    console.log("Booking Data:", booking);
     window.alert("Booking successful!");
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
-    <main className="w-[100%] flex flex-col items-center space-y-4">
-      <div className="text-xl font-medium">New Reservation</div>
-      <div className="w-fit space-y-2">
-        <FormControl variant="standard" className="w-auto space-y-3 bg-gray-100">
-          <TextField
-            variant="standard"
-            name="Name"
-            label="Name"
-            onChange={(e) => setName(e.target.value)}
-          />
-          <TextField
-            variant="standard"
-            name="LastName"
-            label="LastName"
-            onChange={(e) => setLastName(e.target.value)}
-          />
-          <TextField
-            variant="standard"
-            name="Citizen ID"
-            label="Citizen ID"
-            onChange={(e) => setId(e.target.value)}
-          />
-          <div className="text-md text-left text-gray-600">Hospital</div>
-          <Select
-            variant="standard"
-            name="hospital"
-            id="hospital"
-            className="w-auto h-[2em]"
-            value={hospital}
-            onChange={(e) => setHospital(e.target.value)}
-          >
-            {dentists.map((dentist: any) => (
-              <MenuItem key={dentist.hospital} value={dentist.hospital}>
-                {dentist.name}
-              </MenuItem>
-            ))}
-          </Select>
-          <DateReserve onDateChange={(value: Dayjs) => setDate(value)} />
-          <button
-            name="Book Vaccine"
-            className="block rounded-md bg-sky-600 hover:bg-indigo-600 px-3 py-2 shadow-sm text-white"
-          >
-            Book Vaccine
-          </button>
-        </FormControl>
-      </div>
-
-      <div className="mt-6">
-        <h2 className="text-lg font-medium">Existing Bookings</h2>
-        {filteredBookings.length > 0 ? (
-          <ul className="mt-4 space-y-2">
-            {filteredBookings.map((booking: any, index) => (
-              <li
-                key={index}
-                className="border p-2 rounded-md bg-gray-50 shadow-sm"
+    <main className="w-full flex flex-col items-center space-y-6">
+      {ok ? (
+        <>
+          <div className="text-xl font-medium">New Reservation</div>
+          <div className="w-fit space-y-4">
+            <FormControl variant="standard" className="w-auto space-y-3 bg-gray-100 p-4 rounded-md">
+              <div className="text-md text-gray-600">Hospital</div>
+              <Select
+                variant="standard"
+                name="dentis"
+                value={dentist}
+                onChange={(e) => setDentist(e.target.value)}
               >
-                <div><strong>Name:</strong> {booking.dentist.name}</div>
-                <div><strong>Date:</strong> {booking.bookingDate}</div>
-                <div><strong>Hospital:</strong> {booking.dentist.hospital}</div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No bookings available.</p>
-        )}
-      </div>
+                {dentists.length > 0 ? (
+                  dentists.map((dentist: any) => (
+                    <MenuItem key={dentist.id} value={dentist._id}>
+                      {dentist.name}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem disabled>No dentists available</MenuItem>
+                )}
+       
+               </Select>
+               <DateReserve
+  onDateChange={(value: Dayjs | null) => setDate(value)} // Ensure handler accepts `Dayjs | null`
+  selectedDate={date}
+/>
+              <Select
+  variant="standard"
+  name="time"
+  value={time}
+  onChange={(e) => setTime(e.target.value)}
+>
+  {timeOptions.length > 0 ? (
+    timeOptions.map((option, index) => (
+      <MenuItem key={index} value={option.dentistId}>
+        {option.time}
+      </MenuItem>
+    ))
+  ) : (
+    <MenuItem disabled>No times available</MenuItem>
+  )}
+</Select>
+              <button
+                onClick={makeBookings}
+                className="rounded-md bg-sky-600 hover:bg-indigo-600 px-3 py-2 shadow-sm text-white"
+              >Book Now
+              </button>
+            </FormControl>
+          </div>
+        </>
+      ) : (
+  
+        
+        <div className="w-full">
+           <div className="text-xl font-medium">New Reservation</div>
+          <div className="w-fit space-y-4">
+            <FormControl variant="standard" className="w-auto space-y-3 bg-gray-100 p-4 rounded-md">
+              <div className="text-md text-gray-600">Hospital</div>
+              <Select
+                variant="standard"
+                name="dentis"
+                value={dentist}
+                onChange={(e) => setDentist(e.target.value)}
+              >
+                {dentists.length > 0 ? (
+                  dentists.map((dentist: any) => (
+                    <MenuItem key={dentist.id} value={dentist._id}>
+                      {dentist.name}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem disabled>No dentists available</MenuItem>
+                )}
+              </Select>
+              <DateReserve
+  onDateChange={(value: Dayjs | null) => setDate(value)} // Ensure handler accepts `Dayjs | null`
+  selectedDate={date}
+/>
+              <Select
+  variant="standard"
+  name="time"
+  value={time}
+  onChange={(e) => setTime(e.target.value)}
+>
+  {timeOptions.length > 0 ? (
+    timeOptions.map((option, index) => (
+      <MenuItem key={index} value={option.dentistId}>
+        {option.time}
+      </MenuItem>
+    ))
+  ) : (
+    <MenuItem disabled>No times available</MenuItem>
+  )}
+</Select>
+              <button
+              onClick={() => {
+                removeBooking(userBooking._id);
+                makeBookings();
+              }}
+                className="rounded-md bg-sky-600 hover:bg-indigo-600 px-3 py-2 shadow-sm text-white"
+              >Book Now
+              </button>
+            </FormControl>
+          </div>
+          <div className="text-lg font-medium">Your Current Booking</div>
+          <div className="bg-slate-200 rounded px-5 mx-5 py-2 my-2">
+            <div className="text-xl text-black">
+              Date: {dayjs(userBooking.bookingDate).format("YYYY-MM-DD")};
+              Time: {dayjs(userBooking.bookingDate).format("HH:mm")};
+            </div>
+            <div className="text-xl text-black">Doctor: {userBooking.dentist.name}</div>
+            <div className="text-xl text-black">Hospital: {userBooking.dentist.hospital}</div>
+            <button
+              className="block rounded-md bg-red-600 hover:bg-red-700 px-3 py-1 text-white shadow-sm"
+              onClick={() => removeBooking(userBooking._id)}
+            >
+              Cancel Booking
+            </button>
+          </div>
+          <div className="text-lg text-red-500">You already have a reservation!</div>
+        </div>
+      )}
     </main>
   );
 }

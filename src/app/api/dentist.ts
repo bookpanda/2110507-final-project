@@ -32,7 +32,7 @@ export const findAllDentist = async (): Promise<
   FindAllDentistDto | undefined
 > => {
   try {
-    const response = await fetch(`${NEXT_PUBLIC_API_URL}/api/v1/dentists`, {
+    const response = await fetch(`${API_URL}/api/v1/dentists`, {
       method: "GET",
     });
 

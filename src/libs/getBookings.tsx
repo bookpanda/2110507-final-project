@@ -23,7 +23,7 @@ export default async function getBookings(dentistId:string) {
 
     // Check for a successful response
     if (!response.ok) {
-        throw new Error("Failed to register user");
+        throw new Error("Failed to register user+from");
     }
 
     // Parse and return the JSON response from the server

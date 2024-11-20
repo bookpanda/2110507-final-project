@@ -15,8 +15,37 @@ export const fetchBookings = async (dentistId: string): Promise<any> => {
   }
 
   try {
+    const response = await fetch(`${API_URL}/api/v1/bookings/booking`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session?.user.token}`,
+      },
+    });
 
-    const response = await fetch(`${API_URL}/api/v1/bookings`, {
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to fetch bookings");
+    }
+
+    return await response.json();
+  } catch (error: any) {
+    console.error("Error fetching bookings:", error.message);
+    throw error; // Re-throw the error to handle it in the frontend
+  }
+};
+
+export const fetchFBookings = async (dentistId: string): Promise<any> => {
+  const query = dentistId ? `?dentistId=${dentistId}` : '';
+  const session = await getSession();
+  console.log(session)
+  if (!session) {
+    throw new Error("Not authenticated");
+  }
+
+  try {
+
+    const response = await fetch(`${API_URL}/api/v1/bookings/free`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -35,6 +64,5 @@ export const fetchBookings = async (dentistId: string): Promise<any> => {
     throw error;
   }
 };
-
 
 

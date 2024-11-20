@@ -2,10 +2,19 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import { getServerSession } from "next-auth";
 import { Logo } from "../Logo";
 import { NavBarItem } from "./NavBarItem";
+import getUserProfile from "@/libs/getUserProfile";
 
 export const NavBar = async () => {
   const session = await getServerSession(authOptions);
-  const isAdmin = false;
+  let isAdmin = false;
+  if (!session?.user.token) {
+  
+  }
+  else{  const res = await getUserProfile(session.user.token);
+    console.log(res.data)
+    if(res.data.role=="admin"){isAdmin=true}}
+
+
 
   return (
     <div className="sticky top-0 z-50 flex h-16 w-full justify-around border-b bg-white">
