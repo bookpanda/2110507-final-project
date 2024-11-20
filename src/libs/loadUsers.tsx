@@ -35,7 +35,7 @@ export default async function loadUsers() {
           console.error("Error fetching bookings:", error.message);
         } else {
           // Handle other unexpected error types
-          console.error("Unexpected error fetching bookings:", error);
+          console.error("Unexpected error fetching bookings: ", error);
         }
         throw error; // Re-throw the error to propagate it
       }
