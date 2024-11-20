@@ -8,6 +8,10 @@ jest.mock("next-auth/react", () => ({
   useSession: jest.fn(),
 }));
 
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(),
+}));
+
 jest.mock("@/app/api/dentist", () => ({
   createDentist: jest.fn(),
 }));
