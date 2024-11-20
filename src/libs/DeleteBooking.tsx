@@ -17,7 +17,7 @@ export default async function deleteBookings(timebefore:Dayjs,timeafter:Dayjs, d
     const requestBody = {
         timeBefore: timebefore,
         timeAfter: timeafter,
-        dentist: dentistId,
+        dentistId: dentistId,
        
       }
     console.log("Request Body:", JSON.stringify(requestBody));
