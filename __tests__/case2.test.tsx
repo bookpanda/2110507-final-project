@@ -119,7 +119,7 @@ describe("EditDentistPage", () => {
     expect(mockRouter.push).toHaveBeenCalledWith("/dentists");
   });
 
-  test("delete dentist functionality", async () => {
+  test("should delete dentist", async () => {
     render(<EditDentistPage params={{ id: "1" }} />);
 
     const deleteButton = screen.getByRole("button", {
