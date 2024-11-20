@@ -13,7 +13,7 @@ export default function RegisterForm() {
     e.preventDefault();
     setMessage(""); // Clear any previous message
     try {
-      await userRegister(name, email, tel, role, password);
+      await userRegister(name, email, tel, "user", password);
       setMessage("Registration successful! Please log in.");
     } catch (error) {
       setMessage("Registration failed. Please try again.");
