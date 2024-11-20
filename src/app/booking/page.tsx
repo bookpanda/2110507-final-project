@@ -118,141 +118,164 @@ export default function Booking() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <main className="w-full flex flex-col items-center space-y-6">
-      {ok ? (
-        <>
-          <div className="text-xl font-medium">New Reservation</div>
-          <div className="w-fit space-y-4">
-            <FormControl variant="standard" className="w-auto space-y-3 bg-gray-100 p-4 rounded-md">
-              <div className="text-md text-gray-600">Hospital</div>
-              <Select
-                variant="standard"
-                name="dentis"
-                value={dentist}
-                onChange={(e) => setDentist(e.target.value)}
-              >
-                {dentists.length > 0 ? (
-                  dentists.map((dentist: any) => (
-                    <MenuItem key={dentist.id} value={dentist._id}>
-                      {dentist.name}
-                    </MenuItem>
-                  ))
-                ) : (
-                  <MenuItem disabled>No dentists available</MenuItem>
-                )}
-       
-               </Select>
-               <DateReserve
-  onDateChange={(value: Dayjs | null) => setDate(value)} // Ensure handler accepts `Dayjs | null`
-  selectedDate={date}
-/>
-              <Select
-  variant="standard"
-  name="time"
-  value={time}
-  onChange={(e) => setTime(e.target.value)}
->
-  {timeOptions.length > 0 ? (
-    timeOptions.map((option, index) => (
-      <MenuItem key={index} value={option.dentistId}>
-        {option.time}
-      </MenuItem>
-    ))
+    <main className="w-full h-full min-h-screen flex flex-col items-center justify-center px-4 sm:px-8 space-y-6">
+  {ok ? (
+    <>
+      <div className="text-lg sm:text-xl font-medium text-center">New Reservation</div>
+      <div className="w-full max-w-md space-y-4">
+        <FormControl variant="standard" className="w-full space-y-3 bg-gray-100 p-4 rounded-md">
+          <div className="text-md sm:text-lg text-gray-600">Dentist</div>
+          <Select
+            variant="standard"
+            name="dentist"
+            value={dentist}
+            onChange={(e) => setDentist(e.target.value)}
+          >
+            {dentists.length > 0 ? (
+              dentists.map((dentist: any) => (
+                <MenuItem key={dentist.id} value={dentist._id}>
+                  {dentist.name}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem disabled>No dentists available</MenuItem>
+            )}
+          </Select>
+          <DateReserve
+            onDateChange={(value: Dayjs | null) => setDate(value)}
+            selectedDate={date}
+          />
+          <Select
+            variant="standard"
+            name="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+          >
+            {timeOptions.length > 0 ? (
+              timeOptions.map((option, index) => (
+                <MenuItem key={index} value={option.dentistId}>
+                  {option.time}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem disabled>No times available</MenuItem>
+            )}
+          </Select>
+          <button
+            onClick={async () => {
+              try {
+                if (!dentist || !date || !time) {
+                  window.alert("Please fill all fields, select a date, and choose a time!");
+                  return;
+                }
+                await makeBooking(time);
+                window.location.reload();
+              } catch (error) {
+                console.error("Error making booking:", error);
+                alert("An error occurred while making your booking.");
+              }
+            }}
+            className="w-full rounded-md bg-sky-600 hover:bg-indigo-600 px-4 py-2 text-white"
+          >
+            Book Now
+          </button>
+        </FormControl>
+      </div>
+    </>
   ) : (
-    <MenuItem disabled>No times available</MenuItem>
-  )}
-</Select>
-<button
+    <div className="w-full h-full min-h-screen flex flex-col items-center justify-center px-4 sm:px-8 space-y-6">
+      <div className="text-lg sm:text-xl font-medium text-center">Update Reservation</div>
+      <div className="w-full max-w-md space-y-4">
+        <FormControl variant="standard" className="w-full space-y-3 bg-gray-100 p-4 rounded-md">
+          <div className="text-md sm:text-lg text-gray-600">Dentist</div>
+          <Select
+            variant="standard"
+            name="dentist"
+            value={dentist}
+            onChange={(e) => setDentist(e.target.value)}
+          >
+            {dentists.length > 0 ? (
+              dentists.map((dentist: any) => (
+                <MenuItem key={dentist.id} value={dentist._id}>
+                  {dentist.name}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem disabled>No dentists available</MenuItem>
+            )}
+          </Select>
+          <DateReserve
+            onDateChange={(value: Dayjs | null) => setDate(value)}
+            selectedDate={date}
+          />
+          <Select
+            variant="standard"
+            name="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+          >
+            {timeOptions.length > 0 ? (
+              timeOptions.map((option, index) => (
+                <MenuItem key={index} value={option.dentistId}>
+                  {option.time}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem disabled>No times available</MenuItem>
+            )}
+          </Select>
+          <button
   onClick={async () => {
-    try {
-      await makeBookings(); // Wait for makeBookings to complete
-      window.location.reload(); // Reload the page after successful booking
+    try {if (!dentist || !date || !time) {
+      window.alert("Please fill all fields, select a date, and choose a time!");
+      return;
+    }
+      if (userBooking && userBooking._id) {
+        await removeBooking(userBooking._id); // Wait for the booking to be removed
+      }
+      await makeBooking(time); // Wait for the new booking to be created
+      window.location.reload(); // Reload the page after both operations succeed
     } catch (error) {
-      console.error("Error making booking:", error);
-      alert("An error occurred while making your booking.");
+      console.error("Error during booking operation:", error);
+      alert("An error occurred while updating your booking.");
     }
   }}
   className="rounded-md bg-sky-600 hover:bg-indigo-600 px-3 py-2 shadow-sm text-white"
 >
-  Book Now
+  Update Booking
 </button>
-            </FormControl>
-          </div>
-        </>
-      ) : (
-  
-        <div className="w-full h-screen flex flex-col items-center justify-center space-y-6">
-        <div className="text-xl font-medium">New Reservation</div>
-        <div className="w-fit space-y-4">
-          <FormControl variant="standard" className="w-auto space-y-3 bg-gray-100 p-4 rounded-md">
-            <div className="text-md text-gray-600">Hospital</div>
-            <Select
-              variant="standard"
-              name="dentist"
-              value={dentist}
-              onChange={(e) => setDentist(e.target.value)}
-            >
-              {dentists.length > 0 ? (
-                dentists.map((dentist: any) => (
-                  <MenuItem key={dentist.id} value={dentist._id}>
-                    {dentist.name}
-                  </MenuItem>
-                ))
-              ) : (
-                <MenuItem disabled>No dentists available</MenuItem>
-              )}
-            </Select>
-            <DateReserve
-              onDateChange={(value: Dayjs | null) => setDate(value)} // Ensure handler accepts `Dayjs | null`
-              selectedDate={date}
-            />
-            <Select
-              variant="standard"
-              name="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-            >
-              {timeOptions.length > 0 ? (
-                timeOptions.map((option, index) => (
-                  <MenuItem key={index} value={option.dentistId}>
-                    {option.time}
-                  </MenuItem>
-                ))
-              ) : (
-                <MenuItem disabled>No times available</MenuItem>
-              )}
-            </Select>
-            <button
-              onClick={() => {
-                removeBooking(userBooking._id);
-                makeBookings();
-              }}
-              className="rounded-md bg-sky-600 hover:bg-indigo-600 px-3 py-2 shadow-sm text-white"
-            >
-              Book Now
-            </button>
-          </FormControl>
-        </div>
-        <div className="text-lg font-medium">Your Current Booking</div>
-        <div className="bg-slate-200 rounded px-5 py-4 w-fit text-center">
-          <div className="text-xl text-black">
-            Date: {dayjs(userBooking.bookingDate).format("YYYY-MM-DD")}
-          </div>
-          <div className="text-xl text-black">
-            Time: {dayjs(userBooking.bookingDate).format("HH:mm")}
-          </div>
-          <div className="text-xl text-black">Doctor: {userBooking.dentist.name}</div>
-          <div className="text-xl text-black">Hospital: {userBooking.dentist.hospital}</div>
-          <button
-            className="block rounded-md bg-red-600 hover:bg-red-700 px-3 py-1 text-white shadow-sm mt-4"
-            onClick={() => removeBooking(userBooking._id)}
-          >
-            Cancel Booking
-          </button>
-        </div>
-        <div className="text-lg text-red-500">You already have a reservation!</div>
+        </FormControl>
       </div>
-      )}
-    </main>
+      <div className="text-lg sm:text-xl font-medium text-center">Your Current Booking</div>
+      <div className="bg-slate-200 rounded px-5 py-4 w-full max-w-md text-center">
+        <div className="text-lg sm:text-xl text-black">
+          Date: {dayjs(userBooking.bookingDate).format("YYYY-MM-DD")}
+        </div>
+        <div className="text-lg sm:text-xl text-black">
+          Time: {dayjs(userBooking.bookingDate).format("HH:mm")}
+        </div>
+        <div className="text-lg sm:text-xl text-black">Dentist: {userBooking.dentist.name}</div>
+        <div className="text-lg sm:text-xl text-black">Hospital: {userBooking.dentist.hospital}</div>
+        <button
+  className="w-full rounded-md bg-red-600 hover:bg-red-700 px-4 py-2 mt-4 text-white"
+  onClick={async () => {
+    try {
+      await removeBooking(userBooking._id); // Wait for the booking to be removed
+      window.location.reload(); // Reload the page after the operation succeeds
+    } catch (error) {
+      console.error("Error removing booking:", error);
+      alert("An error occurred while removing your booking.");
+    }
+  }}
+>
+  Cancel Booking
+</button>
+      </div>
+      <div className="text-md sm:text-lg text-red-500 text-center">
+        You already have a reservation!
+      </div>
+    </div>
+  )}
+</main>
   );
 }

@@ -5,7 +5,7 @@ import DateReserve from "@/components/DateReserve";
 import { useState, useEffect } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
+import { AppDispatch } from "@/store/store";
 import { findAllDentist } from "../api/dentist";
 import { Dentist } from "@/types";
 import TimeReserve from "@/components/TimeReserve";
@@ -63,19 +63,19 @@ export default function ManageBooking() {
       alert("Please fill all fields.");
       return;
     }
-
+  
     // Combine date and time
     const combinedDateTime = date.hour(time.hour()).minute(time.minute()).second(0);
-
+  
     try {
       await editBooking(selectedBooking, user, combinedDateTime, dentist);
       alert("Booking updated successfully!");
+      window.location.reload(); // Refresh the page after successful update
     } catch (err) {
       console.error(err);
       alert("An error occurred while updating the booking.");
     }
   };
-
   // Fetch all dentists
   useEffect(() => {
     const fetchDentists = async () => {
@@ -129,11 +129,32 @@ export default function ManageBooking() {
             value={selectedBooking}
             onChange={(e) => handleBookingSelection(e.target.value)}
           >
-            {bookings.map((booking) => (
-              <MenuItem key={booking._id} value={booking._id}>
-                {`${booking.dentist.name} - ${dayjs(booking.bookingDate).format("YYYY-MM-DD HH:mm")}`}
-              </MenuItem>
-            ))}
+     {bookings
+  .slice() // Create a shallow copy to avoid mutating the original array
+  .sort((a, b) => {
+    // Sort by date first
+    const dateComparison = dayjs(a.bookingDate).isBefore(b.bookingDate) ? -1 : 1;
+    if (dayjs(a.bookingDate).isSame(b.bookingDate, "day")) {
+      // If dates are the same, sort by dentist.name
+      const nameComparison = a.dentist.name.localeCompare(b.dentist.name);
+      if (nameComparison === 0) {
+        // If dentist names are also the same, sort by time
+        return dayjs(a.bookingDate).isBefore(b.bookingDate) ? -1 : 1;
+      }
+      return nameComparison;
+    }
+    return dateComparison;
+  })
+  .map((booking) => {
+    const matchedUser = users.find((user) => user._id === booking.user); // Find the matching user
+    const userName = matchedUser ? matchedUser.name : "Unknown User"; // Get user.name or fallback to 'Unknown User'
+
+    return (
+      <MenuItem key={booking._id} value={booking._id}>
+        {`${booking.dentist.name} - ${dayjs(booking.bookingDate).format("YYYY-MM-DD HH:mm")} - ${userName}`}
+      </MenuItem>
+    );
+  })}
           </Select>
 
           <div className="text-md text-left text-gray-600">Assign to User</div>

@@ -27,10 +27,9 @@ export const NavBar = async () => {
         {isAdmin && (
           <NavBarItem name="Create new dentist" path="/dentists/new" />
         )}
-        <NavBarItem
-          name={isAdmin ? "All bookings" : "My bookings"}
-          path="/mybooking"
-        />
+         {isAdmin && (
+          <NavBarItem name="Edit Booking" path="/editBooking" />
+        )}
       </div>
       <div className="flex w-[40%] items-center justify-between md:w-[30%]">
         <NavBarItem name="Book an appointment" path="/booking" />
