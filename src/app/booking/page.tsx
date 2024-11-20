@@ -220,6 +220,7 @@ export default function Booking() {
                 onDateChange={(value: Dayjs | null) => setDate(value)}
                 selectedDate={date}
               />
+               <div className="text-md text-gray-600 sm:text-lg">Time</div>
               <Select
                 variant="standard"
                 name="time"

@@ -2,7 +2,7 @@ import { getSession } from "next-auth/react";
 import { API_URL } from "@/config/config";
 import dayjs, { Dayjs } from "dayjs";
 
-export default async function deleteBookings(timebefore:Dayjs,timeafter:Dayjs, dentistId: string) {
+export default async function deleteB(bookingId: string) {
   try {
     // Fetch the current session
     const session = await getSession();
@@ -13,23 +13,17 @@ export default async function deleteBookings(timebefore:Dayjs,timeafter:Dayjs, d
     // Log session details for debugging
     console.log("Session Details:", session);
 
-    // Request body
-    const requestBody = {
-        timeBefore: timebefore,
-        timeAfter: timeafter,
-        dentistId: dentistId,
-       
-      }
-    console.log("Request Body:", JSON.stringify(requestBody));
+ 
+   
 
     // Send the request to the server
-    const response = await fetch(`${API_URL}/api/v1/bookings`, {
+    const response = await fetch(`${API_URL}/api/v1/bookings/${bookingId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session.user.token}`, // Assuming session includes `token`
       },
-      body: JSON.stringify(requestBody),
+     
     });
 
     // Log the raw response status and headers

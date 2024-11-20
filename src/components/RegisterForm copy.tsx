@@ -8,7 +8,7 @@ export default function RegisterForm() {
     const [role, setRole] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
-
+  
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setMessage(""); // Clear any previous message
@@ -65,7 +65,19 @@ export default function RegisterForm() {
                                 placeholder="Phone Number"
                             />
                         </div>
-                        
+                        <div>
+                            <label htmlFor="role" className="sr-only">Role</label>
+                            <input
+                                id="role"
+                                name="role"
+                                type="text"
+                                value={role}
+                                onChange={(e) => setRole(e.target.value)}
+                                required
+                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                placeholder="Role (e.g., Admin)"
+                            />
+                        </div>
                         <div>
                             <label htmlFor="password" className="sr-only">Password</label>
                             <input

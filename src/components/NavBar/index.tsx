@@ -21,9 +21,18 @@ export const NavBar = async () => {
       <div className="flex w-[30%] items-center">
         {session ? (
           <NavBarItem name="Logout" path="/api/auth/signout" />
-        ) : (
+        ) : ( 
           <NavBarItem name="Login" path="/api/auth/signin" />
         )}
+        {!session &&
+          <NavBarItem name="Register" path="/register" />
+        }
+         {isAdmin &&
+          <NavBarItem name="Register" path="/registerA" />
+        }
+         {isAdmin &&
+          <NavBarItem name="Manage Booking" path="/manageBooking" />
+        }
         {isAdmin && (
           <NavBarItem name="Create new dentist" path="/dentists/new" />
         )}
@@ -38,6 +47,7 @@ export const NavBar = async () => {
             </div>
           </>
         )}
+        <NavBarItem name="Dentist" path="/dentists" />
         <Logo />
       </div>
     </div>
