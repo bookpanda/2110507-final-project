@@ -1,17 +1,16 @@
 "use client";
-import { Button } from "@mui/material";
-import { FormControl, TextField, Select, MenuItem } from "@mui/material";
 import DateReserve from "@/components/DateReserve";
-import { useState, useEffect } from "react";
-import dayjs, { Dayjs } from "dayjs";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store/store";
-import { findAllDentist } from "../api/dentist";
-import { Dentist } from "@/types";
 import TimeReserve from "@/components/TimeReserve";
-import loadUsers from "@/libs/loadUsers";
-import getAllBookings from "@/libs/getAllBookings";
 import editBooking from "@/libs/editBooking";
+import getAllBookings from "@/libs/getAllBookings";
+import loadUsers from "@/libs/loadUsers";
+import { AppDispatch } from "@/store/store";
+import { Dentist } from "@/types";
+import { Button, FormControl, MenuItem, Select } from "@mui/material";
+import dayjs, { Dayjs } from "dayjs";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { findAllDentist } from "../api/dentist";
 
 export default function ManageBooking() {
   const [dentists, setDentists] = useState<Dentist[]>([]);
@@ -63,10 +62,13 @@ export default function ManageBooking() {
       alert("Please fill all fields.");
       return;
     }
-  
+
     // Combine date and time
-    const combinedDateTime = date.hour(time.hour()).minute(time.minute()).second(0);
-  
+    const combinedDateTime = date
+      .hour(time.hour())
+      .minute(time.minute())
+      .second(0);
+
     try {
       await editBooking(selectedBooking, user, combinedDateTime, dentist);
       alert("Booking updated successfully!");
@@ -110,51 +112,66 @@ export default function ManageBooking() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="h-[80vh]">Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="h-[80vh]">Error: {error}</div>;
   }
 
   return (
-    <main className="w-[100%] flex flex-col items-center space-y-4">
+    <main className="flex h-[80vh] w-[100%] flex-col items-center space-y-4">
       <div className="text-xl font-medium">Manage Bookings</div>
 
       <div className="w-fit space-y-2">
-        <FormControl variant="standard" className="w-auto space-y-3 bg-gray-100">
+        <FormControl
+          variant="standard"
+          className="w-auto space-y-3 bg-gray-100"
+        >
           <div className="text-md text-left text-gray-600">Select Booking</div>
           <Select
             variant="standard"
             value={selectedBooking}
             onChange={(e) => handleBookingSelection(e.target.value)}
           >
-     {bookings
-  .slice() // Create a shallow copy to avoid mutating the original array
-  .sort((a, b) => {
-    // Sort by date first
-    const dateComparison = dayjs(a.bookingDate).isBefore(b.bookingDate) ? -1 : 1;
-    if (dayjs(a.bookingDate).isSame(b.bookingDate, "day")) {
-      // If dates are the same, sort by dentist.name
-      const nameComparison = a.dentist.name.localeCompare(b.dentist.name);
-      if (nameComparison === 0) {
-        // If dentist names are also the same, sort by time
-        return dayjs(a.bookingDate).isBefore(b.bookingDate) ? -1 : 1;
-      }
-      return nameComparison;
-    }
-    return dateComparison;
-  })
-  .map((booking) => {
-    const matchedUser = users.find((user) => user._id === booking.user); // Find the matching user
-    const userName = matchedUser ? matchedUser.name : "Unknown User"; // Get user.name or fallback to 'Unknown User'
+            {bookings
+              .slice() // Create a shallow copy to avoid mutating the original array
+              .sort((a, b) => {
+                // Sort by date first
+                const dateComparison = dayjs(a.bookingDate).isBefore(
+                  b.bookingDate
+                )
+                  ? -1
+                  : 1;
+                if (dayjs(a.bookingDate).isSame(b.bookingDate, "day")) {
+                  // If dates are the same, sort by dentist.name
+                  const nameComparison = a.dentist.name.localeCompare(
+                    b.dentist.name
+                  );
+                  if (nameComparison === 0) {
+                    // If dentist names are also the same, sort by time
+                    return dayjs(a.bookingDate).isBefore(b.bookingDate)
+                      ? -1
+                      : 1;
+                  }
+                  return nameComparison;
+                }
+                return dateComparison;
+              })
+              .map((booking) => {
+                const matchedUser = users.find(
+                  (user) => user._id === booking.user
+                ); // Find the matching user
+                const userName = matchedUser
+                  ? matchedUser.name
+                  : "Unknown User"; // Get user.name or fallback to 'Unknown User'
 
-    return (
-      <MenuItem key={booking._id} value={booking._id}>
-        {`${booking.dentist.name} - ${dayjs(booking.bookingDate).format("YYYY-MM-DD HH:mm")} - ${userName}`}
-      </MenuItem>
-    );
-  })}
+                return (
+                  <MenuItem key={booking._id} value={booking._id}>
+                    {`${booking.dentist.name} - ${dayjs(booking.bookingDate).format("YYYY-MM-DD HH:mm")} - ${userName}`}
+                  </MenuItem>
+                );
+              })}
           </Select>
 
           <div className="text-md text-left text-gray-600">Assign to User</div>
@@ -184,13 +201,13 @@ export default function ManageBooking() {
           </Select>
 
           <DateReserve
-  selectedDate={date} // Pass the selected date
-  onDateChange={(value: Dayjs | null) => setDate(value)} // Update handler to accept `Dayjs | null`
-/>
-<TimeReserve
-  selectedTime={time} // Pass the selected time
-  onDateChange={(value: Dayjs | null) => setTime(value)} // Update handler to accept `Dayjs | null`
-/>
+            selectedDate={date} // Pass the selected date
+            onDateChange={(value: Dayjs | null) => setDate(value)} // Update handler to accept `Dayjs | null`
+          />
+          <TimeReserve
+            selectedTime={time} // Pass the selected time
+            onDateChange={(value: Dayjs | null) => setTime(value)} // Update handler to accept `Dayjs | null`
+          />
 
           <Button
             onClick={handleUpdateBooking}
