@@ -52,7 +52,6 @@ export default function EditDentistPage({ params }: DentistPageProps) {
           throw new Error("Failed to fetch dentist");
         }
         setDentist(res.data);
-        console.log(res.data);
       } catch (err: any) {
         console.error(err.message || "An error occurred");
       }
@@ -69,13 +68,11 @@ export default function EditDentistPage({ params }: DentistPageProps) {
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     const res = await updateDentist(params.id, dentist, session?.user.token);
-    console.log("Dentist updated:", res);
     router.push("/dentists");
   };
 
   const handleDelete = async (e: React.FormEvent) => {
     const res = await deleteDentist(params.id, session?.user.token);
-    console.log("Dentist Deleted:", res);
     router.push("/dentists");
   };
 

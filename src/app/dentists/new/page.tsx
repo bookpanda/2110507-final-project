@@ -5,10 +5,12 @@ import { CreateDentistDto } from "@/app/api/dto/dentist.dto";
 import { Button } from "@/components/Button";
 import { Box, TextField, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function NewDentistPage() {
   const { data: session, status } = useSession();
+  const router = useRouter();
 
   const [dentist, setDentist] = useState<CreateDentistDto>({
     name: "",
@@ -26,11 +28,10 @@ export default function NewDentistPage() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log("Dentist:", dentist);
     e.preventDefault();
     try {
       const res = await createDentist(dentist, session?.user.token);
-      console.log("Dentist Created:", res);
+      router.push("/dentists");
     } catch (error: any) {
       setError(error.message);
     }
